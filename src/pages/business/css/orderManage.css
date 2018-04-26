@@ -1,0 +1,103 @@
+.left{float:left;}
+.right{float:right;}
+.orderManage{
+    margin-top:0.2rem;
+    background:#fff;
+}
+.tit{
+    height:0.8rem;
+    font-size:0.3rem;
+    color:#666;
+    padding:0 0.3rem;
+    line-height:0.8rem;
+    border-bottom: solid #f1f1f1 1px;
+}
+.code{
+    float:left;
+}
+.state{
+    float:right;
+}
+.address{
+    padding:0.3rem;
+    border-bottom:1px solid #f1f1f1;
+}
+.address:after{
+    display:block;
+    clear:both;
+    content:"";
+    height:0
+}
+.send:after{
+    display:block;
+    clear:both;
+    content:"";
+    height:0
+}
+.send{
+    margin-bottom:0.5rem;
+}
+.sendAddress,.takeAddress,.payL,.payTimeL,.takeTimeL{
+    color:#999;
+    font-size:0.3rem;
+    width:25%;
+}
+.message{
+    color:#333;
+    font-size:0.36rem;
+    width:75%;
+}
+.name{
+    margin-right:0.25rem;
+}
+.detail{
+    margin-top:0.3rem;
+    font-size:0.24rem;
+    color:#999;
+}
+.pay:after{
+    clear:both;
+    content:"";
+    display:block;
+    height:0;
+}
+.payTime:after{
+    clear:both;
+    content:"";
+    display:block;
+    height:0;
+}
+.takeTime:after{
+    clear:both;
+    content:"";
+    display:block;
+    height:0;
+}
+.price{
+    padding:0.3rem;
+    border-bottom:1px solid #f1f1f1;
+}
+.price .message{
+    font-size:0.3rem;
+}
+.date{
+    margin-right:0.25rem;
+}
+.payTime{
+    margin:0.3rem 0;
+}
+.btn{
+    height:0.95rem;
+}
+.takeBtn{
+    width:1.4rem;
+    height:0.5rem;
+    border:2px solid #2290aa;
+    font-size:0.26rem;
+    line-height:0.5rem;
+    text-align:center;
+    color:#2290aa;
+    border-radius:5px;
+    float:right;
+    margin:0.18rem 0.3rem 0 0;
+}

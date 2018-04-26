@@ -1,0 +1,73 @@
+.orderCompletion_top{
+    height:0.92rem;
+    line-height:0.92rem;
+    background:url(../../assets/images/orderbg3.jpg) no-repeat;
+    background-size:100%;
+    font-size:0.34rem;
+    color:#fff;
+    padding:0 0.4rem;
+}
+.orderCompletion_top b{
+    display:inline-block;
+    background:url(../../assets/images/icon9.png) no-repeat left center;
+    background-size:0.35rem 0.35rem;
+    vertical-align:middle;
+    padding-left:0.48rem;
+    font-weight:normal;
+}
+.orderCompletion_dl{
+    background:#fff;
+    padding:0.3rem;
+    margin-top:0.03rem
+}
+.orderCompletion_dl dt{
+    width:0.8rem;
+    height:0.8rem;
+    float:left;
+    padding-top:3%;
+}
+.orderCompletion_dl dt img{
+    display:block;
+    border-radius:100%;
+    width:100%;
+}
+.orderCompletion_dl dd{
+    color:#999;
+    width:5.25rem;
+    line-height:0.38rem;
+    padding-left:0.8rem;
+    float:left;
+    font-size:0.22rem;
+}
+.orderCompletion_dl dd b{
+    color:#333;
+    font-size:0.26rem;
+    line-height:0.5rem;
+}
+.orderC_list{
+    padding:0 0.3rem;
+    background:#fff;
+    margin-top:0.2rem;
+}
+.orderC_list table{
+    width:100%;
+}
+.orderC_list th{
+    padding:0.24rem 0;
+    line-height:0.3rem;
+    font-size:0.26rem;
+    color:#999;
+    width:1.28rem;
+    text-align:left;
+    border-bottom:1px solid #f1f1f1
+}
+.orderC_list td{
+    padding:0.24rem 0.34rem;
+    line-height:0.3rem;
+    font-size:0.26rem;
+    border-bottom:1px solid #f1f1f1
+}
+.orderC_list td p{
+    color:#666;
+    padding-top:0.05rem;
+}

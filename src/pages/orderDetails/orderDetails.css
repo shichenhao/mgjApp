@@ -1,0 +1,18 @@
+.orderDetails_top{background:#fff;padding:0.3rem;margin-top:0.2rem}
+.orderDetails_top dt{width:0.8rem;height:0.8rem;float:left;}
+.orderDetails_top dt img{display:block;border-radius:100%;width:100%;}
+.orderDetails_top dd{color:#333;line-height:0.8rem;padding-left:0.39rem;float:left;font-size:0.26rem;}
+.orderDetails_tit{line-height:0.87rem;padding:0 0.35rem 0 0.4rem;font-size:0.26rem;}
+.orderDetails_tit span{color:#fa8228;float:right;}
+.orderDetails_list{padding:0.4rem 0.3rem 0;background:#fff;}
+.orderDetails_list dl{font-size:0;color:#999}
+.orderDetails_list dt{display:inline-block;font-size:0.22rem;width:0.88rem;text-align:center;line-height:0.35rem;vertical-align:top;}
+.orderDetails_list dt p{top:-0.05rem;position:relative;}
+.orderDetails_list dt span{font-size:0.26rem;}
+.orderDetails_list dd{position:relative;display:inline-block;font-size:0.26rem;padding-bottom:0.65rem;width:5.18rem;padding-left:0.5rem;margin-left:0.3rem;border-left:1px solid #e7e7e7;line-height:0.32rem;vertical-align:top;}
+.orderDetails_list dd p{position:relative;top:-0.05rem;}
+.orderDetails_list dd i{display:block;width:0.21rem;height:0.21rem;background:url(../../assets/images/icon8.jpg) no-repeat;background-size:100%;position:absolute;left:-0.12rem;top:0;}
+.orderDetails_list dd b{color:#ee8230;font-weight:normal;text-decoration:underline;}
+.orderDetails_list dd:last-child{border:0}
+.orderDetails_list dl.on{color:#00a2d3}
+.orderDetails_list dl.on i{background:url(../../assets/images/icon7.jpg) no-repeat;background-size:100%;}

@@ -1,0 +1,37 @@
+.postage_msg{
+    font-size:0.3rem;
+    color:#fff;
+    line-height:0.35rem;
+    height:1.41rem;
+    background:url(../../assets/images/order_popbg1.jpg) no-repeat;
+    background-size:100%;
+    padding:0.55rem 0.34rem 0;
+}
+.postage_tit{
+    font-size:0.24rem;
+    color:#00a2d3;
+    line-height:0.83rem;
+    padding:0 0.42rem;
+}
+.postage_tab{
+    margin-bottom:0.3rem;
+    border-bottom:1px solid #dedede;
+}
+.postage_tab th{
+     font-size:0.22rem;
+     color:#999;
+    background:#fff;
+    line-height:0.38rem;
+    padding:0.25rem 0;
+ }
+.postage_tab td{
+    font-size:0.22rem;
+    color:#333;
+    background:#f0f5f7;
+    text-align:center;
+    line-height:0.38rem;
+    padding:0.25rem 0;
+}
+.postage_tab .colore0e{
+    background:#e0e8eb
+}

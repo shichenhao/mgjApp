@@ -1,0 +1,240 @@
+.priceSet{
+    padding: 0 0 1rem;
+}
+
+.priceSet dl{
+    margin:0.2rem 0.3rem;
+    background:#fff;
+    border:1px solid #f1f1f1;
+    padding:0.4rem 0.36rem;
+}
+.priceSet dl dt{
+    color:#333;
+    font-size:0.3rem;
+    font-weight:600;
+}
+.priceSet dl dt span{
+    display:inline-block;
+    vertical-align:top;
+}
+.priceSet dl dt .address{
+    max-width:4.5rem;
+}
+.priceSet dl dt span i{
+    margin-right:0.22rem;
+    display:inline-block;
+    margin-bottom:0.1rem;
+}
+.priceSet dl dd{
+    margin-top:0.35rem;
+    font-size:0.26rem;
+    color:#333;
+}
+.priceSet dl dd .price{
+    width:49%;
+    display:inline-block;
+}
+.priceSet dl dd span span{
+    color:#999;
+}
+.priceSet dl dd .money{
+    color:#333;
+    font-size:0.36rem;
+    /*font-weight:600;*/
+}
+.btn{
+    color:#fff;
+    font-size:0.34rem;
+    height:0.98rem;
+    background:#2290ea;
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    text-align:center;
+    line-height:0.98rem;
+}
+
+.btn a{
+    color: #fff;
+}
+
+
+.priceBox{
+    background: #fff;
+
+}
+
+.priceItem{
+    height: .88rem;
+    line-height: .88rem;
+    border-bottom: 1px solid #f1f1f1;
+    padding: 0 .3rem 0 1.65rem;
+    position: relative;
+    font-size: .28rem;
+    display: flex;
+    color: #333;
+    align-items: center;
+}
+
+.priceItem:nth-child(5){
+    padding-left: 2.4rem;
+}
+
+.priceItem i{
+    display: flex;
+    height: .5rem;
+    line-height: .5rem;
+    padding: 0 .2rem;
+    margin-right: .2rem;
+    border:1px solid #2290ea;
+    color: #fff;
+    background: #2290ea;
+    font-size: .28rem;
+    align-items: center;
+}
+
+.priceItem .btn-add{
+    font-size: .5rem;
+    background: #fff;
+    color: #2290ea;
+}
+
+.priceItem b{
+    position: absolute;
+    left: 0.3rem;
+    top: 0;
+    font-weight: 400;
+}
+
+.priceItem span{
+    position: absolute;
+    right: .3rem;
+    top: 0;
+}
+
+.priceItem input{
+    height: .35rem;
+    border: 0 none;
+    border-left: 1px solid #ccc;
+    padding: 0 .2rem;
+}
+
+.addPop{
+    position: fixed;
+    background: rgba(0,0,0,0.5);
+    width: 100%;
+    height: 100%;
+    top:0;
+    left: 0;
+}
+
+.addBox{
+    position: absolute;
+    width: 5.6rem;
+    background: #fff;
+    top:50%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    transform: translateY(-50%);
+    padding-bottom:.7rem;
+}
+
+.addCont{
+    display: flex;
+    flex-wrap: wrap;
+    padding: .2rem .34rem;
+}
+
+.addCont span{
+    width: 22%;
+    margin: 1.5%;
+    height: .5rem;
+    display: flex;
+    border: 1px solid #ccc;
+    color: #333;
+    align-items: center;
+    justify-content: center;
+    font-size: .26rem;
+    box-sizing: border-box;
+}
+
+.addCont span.active{
+    position: relative;
+    border-color: #2290ea;
+    color: #2290ea;
+}
+
+.addCont span.active:before{
+    content: '';
+    position: absolute;
+    bottom: 0px;
+    right:  0px;
+    width: .32rem;
+    height: .32rem;
+    background: url(../../../assets/images/select.png) no-repeat;
+    background-size: 100%;
+}
+
+.addFiexd{
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+}
+
+.addFiexd a{
+    display: block;
+    height: .7rem;
+    line-height: .7rem;
+    text-align: center;
+    color: #fff;
+    font-size: .3rem;
+    background: #2290ea;
+}
+
+
+
+
+.btnFiexd{
+    position: fixed;
+    color:#fff;
+    font-size:0.34rem;
+    height:0.98rem;
+    background:#fff;
+    bottom:0;
+    left:0;
+    width:100%;
+    text-align:center;
+    line-height:0.98rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 .2rem;
+    box-sizing: border-box;
+}
+
+
+
+
+
+
+.button{
+    height: .7rem;
+    line-height: .7rem;
+    display: flex;
+    width: 47%;
+    background: #fff;
+    border-radius: 5px;
+    border:1px solid #2290ea;
+    color: #2290ea;
+    justify-content: center;
+    align-items: center;
+    font-size: .3rem;
+}
+
+.button-primary{
+    color: #fff;
+    background: #2290ea;
+}

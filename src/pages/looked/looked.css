@@ -1,0 +1,20 @@
+.looked_list{}
+.looked_list dl{padding:0.3rem;background:#fff;margin-top:0.2rem;}
+.looked_list dl dt{width:0.8rem;height:0.8rem;float:left;}
+.looked_list dl dt img{display:block;border-radius:100%;width:100%;}
+.looked_list dl dd{width:5.7rem;float:right;font-size:0.26rem;color:#999;line-height:0.4rem;}
+.looked_list dl dd h4{font-size:0.26rem;color:#333;font-weight:normal;}
+
+.noneMore{
+    text-align: center;
+    font-size: .3rem;
+    padding: 1rem 0 0;
+}
+
+.loadingCenter{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #26a2ff;
+    font-size: .24rem;
+}

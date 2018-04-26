@@ -1,0 +1,38 @@
+.newTime{
+    padding:0 0.3rem;
+}
+.serviceDate{
+    color:#333;
+    padding:0.44rem 0.4rem;
+    background:#fff;
+    margin-top:0.2rem;
+    border:1px solid #f1f1f1;
+}
+.tit{
+    font-size:0.3rem;
+    margin-bottom:0.12rem;
+}
+.contentTime{
+    font-size:0.26rem;
+}
+.contentTime span{
+    margin-right:0.4rem;
+    margin-top:0.28rem;
+    display:inline-block;
+}
+.btn{
+    color:#fff;
+    font-size:0.34rem;
+    height:0.98rem;
+    background:#2290ea;
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    text-align:center;
+    line-height:0.98rem;
+}
+
+.btn a{
+    color: #fff;
+}

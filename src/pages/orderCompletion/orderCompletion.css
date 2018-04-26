@@ -1,0 +1,125 @@
+.orderCompletion_top{
+    height:0.92rem;
+    line-height:0.92rem;
+    background:url(../../assets/images/orderbg2.jpg) no-repeat;
+    background-size:100%;
+    font-size:0.34rem;
+    color:#fff;
+    padding:0 0.4rem;
+}
+.orderCompletion_top1{
+    background-image:url(../../assets/images/orderbg4.jpg);
+}
+.orderCompletion_top2{
+    background-image:url(../../assets/images/orderbg3.jpg);
+}
+.orderCompletion_top b{
+    display:inline-block;
+    background:url(../../assets/images/icon9.png) no-repeat left center;
+    background-size:0.35rem 0.35rem;
+    vertical-align:middle;
+    padding-left:0.48rem;
+    font-weight:normal;
+}
+.orderCompletion_dl{
+    background:#fff;
+    padding:0.3rem;
+    margin-top:0.03rem
+}
+.orderCompletion_dl dt{
+    width:0.8rem;
+    height:0.8rem;
+    float:left;
+    padding-top:3%;
+}
+.orderCompletion_dl dt img{
+    display:block;
+    border-radius:100%;
+    width:100%;
+}
+.orderCompletion_dl dd{
+    color:#999;
+    width:5.25rem;
+    line-height:0.38rem;
+    padding-left:0.8rem;
+    float:left;
+    font-size:0.22rem;
+}
+.orderCompletion_dl dd b{
+    color:#333;
+    font-size:0.26rem;
+    line-height:0.5rem;
+}
+.orderC_list{
+    padding:0 0.3rem;
+    background:#fff;
+    margin-top:0.2rem;
+}
+.orderC_list table{
+    width:100%;
+}
+.orderC_list th{
+    padding:0.24rem 0;
+    line-height:0.3rem;
+    font-size:0.26rem;
+    color:#999;
+    width:1.28rem;
+    text-align:left;
+    border-bottom:1px solid #f1f1f1
+}
+.orderC_list td{
+    padding:0.24rem 0.34rem;
+    line-height:0.3rem;
+    font-size:0.26rem;
+    border-bottom:1px solid #f1f1f1
+}
+.orderC_list td p{
+    color:#666;
+    padding-top:0.05rem;
+}
+
+
+
+
+
+
+
+
+
+
+.order_cost{
+    position:fixed;
+    left:0;bottom:0;
+    width:100%;
+}
+.order_costC{
+    background:#fff;
+    max-width:750px;
+    height:1.1rem;
+    line-height:1.1rem;
+    font-size:0.26rem;
+    text-align:right;
+    padding:0 0.24rem;
+    box-sizing:border-box;
+    color:#999;
+}
+.order_costC a{
+    font-size:0.26rem;
+    width:1.45rem;
+    height:0.47rem;
+    line-height:0.47rem;
+    display:inline-block;
+    text-align:center;
+    border:1px solid #00a2d3;
+    color:#00a2d3;
+    border-radius:0.3rem;
+    margin:-0.08rem 0.28rem 0;
+    vertical-align:middle;
+
+}
+.order_costC b{
+    font-size:0.34rem;
+    color:#ff7c04;
+    margin:0 0.2rem;
+    font-weight:normal;
+}
