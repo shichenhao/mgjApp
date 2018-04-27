@@ -47,7 +47,7 @@
         </div>
         <div class="order_cost" v-if="orderInfo.status==1">
             <div class="order_costC">
-                费用预估<b>{{orderInfo.price}}元</b><a href="#">付款</a>
+                费用预估<b>{{orderInfo.price}}元</b><a @click="payment">付款</a>
             </div>
         </div>
     </div>
@@ -71,6 +71,12 @@
       },
       goDetail(id){
         this.$router.push(`/orderCompletion/${id}`);
+      },
+      payment(){    //付款
+        let _this=this
+        YLJsBridge.call('pay',{orderId:this.orderInfo.id},function(a){
+          alert(a)
+        })
       }
     },
     created(){

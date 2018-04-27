@@ -22,6 +22,8 @@ axios.interceptors.request.use(function (config) {
 Vue.use(MintUI)
 Vue.prototype.axios=axios;
 
+
+
 new Vue({
   el: '#app',
   router,

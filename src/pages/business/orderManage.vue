@@ -1,44 +1,44 @@
 <template>
     <div>
-        <div class="orderManage">
+        <div class="orderManage" v-for="item in list.list">
             <div class="tit">
-                <div class="code">1234567</div>
-                <div class="state">待取件</div>
+                <div class="code">{{ item.id }}</div>
+                <div class="state">{{ '状态'.takeFilter(item.status) }}</div>
             </div>
             <div class="address">
                 <div class="send">
                     <div class="left sendAddress">寄件地址：</div>
                     <div class="right message">
-                        <span class="name">上半年</span>
-                        <span class="phone">12341234123</span>
-                        <div class="detail">寄件地址寄件地址寄件地址寄件地址寄件地址</div>
+                        <span class="name">{{ item.consignerName }}</span>
+                        <span class="phone">{{ item.consignerMobile }}</span>
+                        <div class="detail">{{ item.consignerAddress }}</div>
                     </div>
                 </div>
                 <div class="take">
                     <div class="left takeAddress">取件地址：</div>
                     <div class="right message">
-                        <span class="name">上半年</span>
-                        <span class="phone">12341234123</span>
-                        <div class="detail">寄件地址寄件地址寄件地址寄件地址寄件地址</div>
+                        <span class="name">{{ item.consigneeName }}</span>
+                        <span class="phone">{{ item.consigneeMobile }}</span>
+                        <div class="detail">{{ item.consigneeAddress }}</div>
                     </div>
                 </div>
             </div>
             <div class="price">
                 <div class="pay">
                     <div class="left payL">支付价格：</div>
-                    <div class="right message"><sapn>12</sapn><sapn>元</sapn></div>
+                    <div class="right message"><span>{{ item.price }}</span><span>元</span></div>
                 </div>
                 <div class="payTime">
                     <div class="left payTimeL">支付时间：</div>
-                    <div class="right message"><span class="date">3月29日</span><span>13:29</span></div>
+                    <div class="right message"><span class="date">{{ item.paymentExpireTime}}</span></div>
                 </div>
-                <div class="takeTime">
+                <div class="takeTime" v-if="item.pickUpTime && item.pickUpTime!= 'undefined'">
                     <div class="left takeTimeL">取件时间：</div>
-                    <div class="right message"><span class="date">3月29日</span><span>14:00－16:00</span></div>
+                    <div class="right message"><span class="date">{{ item.pickUpTime}}</span></div>
                 </div>
             </div>
             <div class="btns">
-                <div @click="take()" class="takeBtn">取件</div>
+                <div @click="take(item.id)" class="takeBtn">取件</div>
             </div>
         </div>
     </div>

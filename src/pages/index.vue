@@ -12,18 +12,24 @@
                     <li class="clearfix">
                         <i></i>
                         <dl>
-                            <dt style="display:none">你当前位置?</dt>
-                            <dd style="display:block"><strong>杨朝阳&nbsp;&nbsp;12345678921</strong><p>北京北京市海淀区中关村海淀区知春路甲45-8号北京北淀区中关村海淀区知春路甲45-8号</p></dd>
+                            <dt v-if="!params.consignerAddressId">你当前位置?</dt>
+                            <dd v-if="params.consignerAddressId">
+                                <strong>{{params.consignerName}}&nbsp;&nbsp;{{params.consignerMobile}}</strong>
+                                <p>{{params.consignerAddress}}</p>
+                            </dd>
                         </dl>
-                        <a href="javascript:void(0)" class="addrH_on">地址薄</a>
+                        <a @click="selectAddress(1)" class="addrH_on">地址薄</a>
                     </li>
                     <li class="clearfix">
                         <i></i>
                         <dl>
-                            <dt>你想寄到哪里?</dt>
-                            <dd><strong>杨朝阳&nbsp;&nbsp;12345678921</strong><p>北京北京市海淀区中关村海淀区知春路甲45-8号北京北淀区中关村海淀区知春路甲45-8号</p></dd>
+                            <dt v-if="!params.consigneeAddressId">你当前位置?</dt>
+                            <dd v-if="params.consigneeAddressId">
+                                <strong>{{params.consigneeName}}&nbsp;&nbsp;{{params.consigneeMobile}}</strong>
+                                <p>{{params.consigneeAddress}}</p>
+                            </dd>
                         </dl>
-                        <a href="javascript:void(0)" class="addrH_on">地址薄</a>
+                        <a @click="selectAddress(2)" class="addrH_on">地址薄</a>
                     </li>
                 </ul>
             </div>
@@ -64,7 +70,7 @@
             <div class="search_box">
                 <ul>
                     <li>
-                        <input type="text" class="search_num" v-model="searchParams.number" placeholder="请输入单号"><a class="search_sm"><img src="../assets/images/icon3.jpg" width="100%"></a>
+                        <input type="text" class="search_num" v-model="searchParams.number" placeholder="请输入单号"><a class="search_sm"><img @click="scanning" src="../assets/images/icon3.jpg" width="100%"></a>
                     </li>
                     <li @click="searchCompany">
                         <span v-if="!searchParams.company" class="search_company">快递公司{{searchParams.company}}</span>
@@ -124,7 +130,7 @@
     </div>
 </template>
 <script>
-    import { MessageBox, Indicator } from 'mint-ui';
+    import { Indicator } from 'mint-ui';
     import courierList from '@/pages/courierList/courierList'
     export default {
         name: 'index',
@@ -133,7 +139,7 @@
         },
         data () {
             return {
-                state:true, //true:寄件 , false:查件
+                state:JSON.parse(sessionStorage.getItem('state') || true), //true:寄件 , false:查件
                 postage:JSON.parse(localStorage.getItem('postage')) || false,//不再提示
                 checkbox:false, //同意协议
                 openDate:false,//显示时间弹窗
@@ -151,10 +157,6 @@
                       className: 'slot1',
                       textAlign: 'right'
                     }, {
-                      divider: true,
-                      content: '　　　',
-                      className: 'slot2'
-                    }, {
                       flex: 1,
                       values: [],
                       className: 'slot3',
@@ -162,8 +164,19 @@
                     }
                 ],
                 params:{
+                  consignerAddressId:null,
+                  consignerAddress:null,
+                  consignerHouseNumber:null,
+                  consignerName:null,
+                  consignerMobile:null,
+                  consigneeAddressId:null,
+                  consigneeAddress:null,
+                  consigneerHouseNumber:null,
+                  consigneeName:null,
+                  consigneeMobile:null,
                 },
                 searchParams:{
+                  number:null
                 },
                 popParams:{
                     pickUpTime:null,
@@ -173,9 +186,34 @@
         },
         methods:{
             getInit(){
-                this.axios.post('/userClient/findExpressMerchantList',{agentId:206}).then((res)=>{//商家列表
+                this.axios.post('/userClient/findExpressMerchantList',{agentId:sessionStorage.getItem('agentId')}).then((res)=>{//商家列表
                   this.courierLists=res.data.value
                 })
+            },
+            scanning(){ //扫码
+              YLJsBridge.call('scanCode',{codeType:2},function(a){
+                alert(a)
+              })
+            },
+            selectAddress(type){//选择地址
+              let _this=this
+              YLJsBridge.call('selectAddress',{codeType:2},function(string){
+                let obj = JSON.parse(string.value)
+                if(type == 1){
+                  _this.params.consignerAddressId  = obj.id
+                  _this.params.consignerAddress = obj.address
+                  _this.params.consignerHouseNumber = obj.address
+                  _this.params.consignerName = obj.name
+                  _this.params.consignerMobile = obj.mobile
+                }else if(type==2) {
+                  _this.params.consigneeAddressId = obj.id
+                  _this.params.consigneeAddress = obj.address
+                  _this.params.consigneerHouseNumber = obj.address
+                  _this.params.consigneeName = obj.name
+                  _this.params.consigneeMobile = obj.mobile
+                }
+              })
+
             },
             getTimes(){
               this.params.pickUpDate=null
@@ -188,8 +226,8 @@
                 this.dataTimeLength=res.data.value.length
                 if(res.data.value.length){
                     this.dataTime[0].values=[];
-                    this.dataTime[2].values=[];
-                    this.dataTime[2].values.push(res.data.value[0].serviceTime)
+                    this.dataTime[1].values=[];
+                    this.dataTime[1].values.push(res.data.value[0].serviceTime)
                     res.data.value.map((item)=>{
                       this.dataTime[0].values.push('哪一天'.filtersDay(item.serviceDay))
                       dayTimes['哪一天'.filtersDay(item.serviceDay)]=item.serviceTime.split(',')
@@ -198,7 +236,8 @@
                 }
               })
             },
-            tabState(state){//关闭弹窗
+            tabState(state){//切换
+                sessionStorage.setItem('state',state)
                 this.state=state
                 this.expressSstate=state ? 1 : 2
             },
@@ -207,23 +246,29 @@
                 this.postage=true
             },
             goSend(){//寄快递
-              if(!this.checkbox){
-                MessageBox('提示', '请同意服务协议！');
+              if(!this.params.consignerAddressId){
+                alert('选择发货地址！')
+                return false
+              }else if(!this.params.consigneeAddressId){
+                alert('请选择收货地址！')
                 return false
               }else if(!this.params.merchantId){
-                MessageBox('提示', '请选择快递公司！');
+                alert('请选择快递公司！')
                 return false
               }else if(!this.params.pickUpTime){
-                MessageBox('提示', '请选配送择时间段！');
+                alert('请选配送择时间段！')
                 return false
               }else if(!this.params.remark){
-                MessageBox('提示', '请给快递员留言！');
+                alert('请给快递员留言！')
+                return false
+              }else if(!this.checkbox){
+                alert('请同意服务协议！')
                 return false
               }
 
               Indicator.open('下单中...');
 
-              this.params.consignerAddressId=1
+              /*this.params.consignerAddressId=1
               this.params.consignerAddress=1
               this.params.consignerHouseNumber=1
               this.params.consignerName=1
@@ -232,7 +277,7 @@
               this.params.consigneeAddress=1
               this.params.consigneerHouseNumber=1
               this.params.consigneeName=1
-              this.params.consigneeMobile=1
+              this.params.consigneeMobile=1*/
               this.params.paymentType=1
               this.params.price=1
               this.params.weight=1
@@ -242,15 +287,15 @@
                 this.$router.push('/order');
               }).catch((error)=>{
                 Indicator.close();
-                MessageBox('提示', error.response.data.message);
+                alert(error.response.data.message);
               })
             },
             openDatePop(state) {//寄送时间确认
                 if(!this.params.merchantId){
-                    MessageBox('提示', '请先选择快递公司！');
+                    alert('请先选择快递公司！');
                     return false
                 }else if(!this.dataTimeLength){
-                  MessageBox('提示', '该快递公司暂时休息中，请换一个快递公司吧！');
+                  alert('该快递公司暂时休息中，请换一个快递公司吧！');
                   return false
                 }
                 this.openDate=!this.openDate
@@ -296,10 +341,14 @@
                 }
               }).catch((error)=>{
                 Indicator.close();
-                MessageBox('提示', error.response.data.message);
+                alert(error.response.data.message)
               })
             },
             searchCompany(){ //查询快递公司
+              if(!this.searchParams.number){
+                alert('请输入快递单号！')
+                return false
+              }
               Indicator.open('查询中...');
               this.axios.post('/userClient/findExpressCompanyListByNumber',addToken(this.searchParams)).then((res)=>{//商家列表
                 Indicator.close();
@@ -313,7 +362,7 @@
                 }
               }).catch((error)=>{
                 Indicator.close();
-                MessageBox('提示', error.response.data.message);
+                alert(error.response.data.message);
               })
 
             }

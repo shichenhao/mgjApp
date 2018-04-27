@@ -58,7 +58,6 @@
         consignerName:[],//选中发货的地区
         consigneeName:[],//选中收获的地区
         params:{
-          consignerProvince:21
         }
       }
     },
@@ -94,21 +93,21 @@
 
         Indicator.open('加载中...');
         console.log(this.params)
-        this.consignerName ? this.params.consignerProvinces=this.consignerName.map((i)=>{
+        this.consignerName ? this.params.consignerProvince=this.consignerName.map((i)=>{
             return i.id
         }).toString() : ''
-        this.consigneeName ? this.params.consigneeProvinces=this.consigneeName.map((i)=>{
+        this.consigneeName ? this.params.consigneeProvince=this.consigneeName.map((i)=>{
           return i.id
         }).toString() : ''
 
 
         this.axios.post('/merchantClient/createOrMergeExpressPrice',addToken(this.params)).then((res)=>{
           Indicator.close();
-          MessageBox('提示', '操作成功！');
+          alert('操作成功！');
           this.$router.push(`/business/price`);
         }).catch((error)=>{
           Indicator.close();
-          MessageBox('提示', error.response.data.message);
+          alert(error.response.data.message);
         })
       },
       selectChange(id){   //选择地区

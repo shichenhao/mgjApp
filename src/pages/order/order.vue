@@ -34,11 +34,6 @@
       }
     },
     methods:{
-      getInit(){//查询订单
-        this.axios.post('/userClient/findExpressOrderListByUserId',addToken()).then((res)=>{//商家列表
-          this.orderList=res.data.value
-        })
-      },
       goDetail(id){
         this.$router.push(`/orderCompletion/${id}`);
       },
@@ -49,6 +44,7 @@
           start+1;
           this.loading = true;
           setTimeout(() => {
+            this.total=0
             this.axios.post('/userClient/findExpressOrderListByUserId',addToken({start})).then((res)=>{//寄送时间
               this.total=res.data.value.length
               this.orderList=[...this.orderList, ...res.data.value]
@@ -57,9 +53,6 @@
           }, 1500);
         }
       }
-    },
-    created(){
-      this.getInit()
     }
   }
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="serverTimeBox">
         <div class="serviceTime">
             <ul>
                 <li @click="openDatePop()">

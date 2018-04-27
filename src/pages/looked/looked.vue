@@ -11,7 +11,7 @@
             <div class="loadingCenter" v-show="loading">
                 <mt-spinner type="fading-circle" color="#26a2ff"></mt-spinner> 加载中
             </div>
-            <div class="noneMore" v-if="!courierList.length">
+            <div class="noneMore" v-if="total==0">
                 你还没有查询过快递哦！
             </div>
         </div>
@@ -30,11 +30,6 @@
       }
     },
     methods:{
-      getInit(){//查询订单
-        this.axios.post('/userClient/findExpressQueryListByUserId',addToken()).then((res)=>{//商家列表
-          this.courierList=res.data.value
-        })
-      },
       goDetail(number, company){
         this.$router.push(`/orderDetails/${number}/${company}`);
       },
@@ -45,17 +40,19 @@
           start+1;
           this.loading = true;
           setTimeout(() => {
+            this.total=0
             this.axios.post('/userClient/findExpressQueryListByUserId',addToken({start})).then((res)=>{//寄送时间
-              this.total=res.data.value.length
+              if(res.data.value.length){
+                this.total=res.data.value.length
+              }else{
+                this.total=0
+              }
               this.courierList=[...this.courierList, ...res.data.value]
             })
             this.loading = false;
           }, 1500);
         }
       }
-    },
-    created(){
-      this.getInit()
     }
   }
 </script>

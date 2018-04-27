@@ -1,6 +1,5 @@
 <template>
     <div class="wrapper">
-        <v-head title="快递"></v-head>
         <div class="content">
             <router-view></router-view>
         </div>

@@ -1,4 +1,34 @@
-sessionStorage.setItem("token",'78c8001ccbdc40fb9370b66a35304b9e')//babcb87a9a014bc2a01cef0572566e1e,用户b7dd6865e6d244979ddc2f10c80a5782,管理78c8001ccbdc40fb9370b66a35304b9e
+//sessionStorage.setItem("token",'b7dd6865e6d244979ddc2f10c80a5782')//babcb87a9a014bc2a01cef0572566e1e,用户b7dd6865e6d244979ddc2f10c80a5782,管理78c8001ccbdc40fb9370b66a35304b9e
+
+if(window.YLJsBridge){
+  setTimeout(()=>{
+    YLJsBridge.call('getToken','',function(a){
+      //alert(a.value)
+      //sessionStorage.setItem("token",a.value)
+      sessionStorage.setItem("token",'78c8001ccbdc40fb9370b66a35304b9e')
+      YLJsBridge.call('getAgentId','',function(b){
+        sessionStorage.setItem("agentId",b.value)
+      })
+    })
+  },100)
+}else{
+  sessionStorage.setItem("token",'78c8001ccbdc40fb9370b66a35304b9e')//9e14fa2051b641ebbbfc6c805908cd2a
+
+}
+
+window.alert = function(msg){
+  if(window.YLJsBridge) {
+    YLJsBridge.call('alert',
+      {
+        title: '提示',
+        button: '确定',
+        message: msg,
+      }
+    )
+  }else{
+    console.log(msg)
+  }
+}
 
 window.addToken=function(obj){
   var newObj=obj || {}
@@ -50,6 +80,10 @@ String.prototype.addDate = function(date, days) {
   let month = date.getMonth() + 1;
   let day = dates.getDate();
   return (dates.getFullYear() + '-' + '1'.getFormatDate(month) + '-' + '1'.getFormatDate(day)).toString();
+}
+
+String.prototype.toJson = function(string) {
+  return JSON.parse(JSON.stringify(string))
 }
 
 // 日期月份/天的显示，如果是1位数，则在前面加上'0'
@@ -116,6 +150,21 @@ String.prototype.statusFilter=function(state){
       break
     case 3:
       text='已完成'
+      break
+    default:
+      text = ''
+      break
+  }
+  return text
+}
+String.prototype.takeFilter=function(state){
+  let text=''
+  switch (state){
+    case 0:
+      text='已取件'
+      break
+    case 1:
+      text='代取件'
       break
     default:
       text = ''
