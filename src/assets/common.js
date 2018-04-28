@@ -4,8 +4,8 @@ if(window.YLJsBridge){
   setTimeout(()=>{
     YLJsBridge.call('getToken','',function(a){
       //alert(a.value)
-      //sessionStorage.setItem("token",a.value)
-      sessionStorage.setItem("token",'78c8001ccbdc40fb9370b66a35304b9e')
+      sessionStorage.setItem("token",a.value)
+      //sessionStorage.setItem("token",'78c8001ccbdc40fb9370b66a35304b9e')
       YLJsBridge.call('getAgentId','',function(b){
         sessionStorage.setItem("agentId",b.value)
       })

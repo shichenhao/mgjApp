@@ -186,7 +186,7 @@
         },
         methods:{
             getInit(){
-                this.axios.post('/userClient/findExpressMerchantList',{agentId:sessionStorage.getItem('agentId')}).then((res)=>{//商家列表
+                this.axios.post('/userClient/findExpressMerchantList',{agentId:sessionStorage.getItem('agentId') || 206}).then((res)=>{//商家列表
                   this.courierLists=res.data.value
                 })
             },
