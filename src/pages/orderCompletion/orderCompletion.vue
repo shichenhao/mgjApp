@@ -62,7 +62,7 @@
     },
     methods:{
       getInit(){//查询订单
-        this.axios.post('/userClient/findExpressOrderById',addToken({id:this.$router.history.current.params.id})).then((res)=>{//商家列表
+        this.axios.post('/express/userClient/findExpressOrderById',addToken({id:this.$router.history.current.params.id})).then((res)=>{//商家列表
           this.orderInfo=res.data.value
           if(new Date().getTime() > new Date(res.data.value.paymentExpireTime).getTime()){
             this.orderInfo.status = -1
@@ -74,7 +74,7 @@
       },
       payment(){    //付款
         let _this=this
-        YLJsBridge.call('pay',{orderId:this.orderInfo.id},function(a){
+        YLJsBridge.call('pay',{orderId:_this.orderInfo.id},function(a){
           alert(a)
         })
       }

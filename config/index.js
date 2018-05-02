@@ -9,25 +9,25 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/public':{
+      '/express/public':{
         target:'http://39.108.16.242/express/public',
         changeOrigin:true,
         pathRewrite:{
-          '/public':''
+          '/express/public':''
         }
       },
-      '/userClient':{
+      '/express/userClient':{
         target:'http://39.108.16.242/express/userClient',
         changeOrigin:true,
         pathRewrite:{
-          '^/userClient':''
+          '^/express/userClient':''
         }
       },
-      '/merchantClient':{
+      '/express/merchantClient':{
         target:'http://39.108.16.242/express/merchantClient',
         changeOrigin:true,
         pathRewrite:{
-          '^/merchantClient':''
+          '^/express/merchantClient':''
         }
       }
     },

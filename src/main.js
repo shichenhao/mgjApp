@@ -5,6 +5,7 @@ import 'mint-ui/lib/style.css'
 import App from './App.vue'
 import axios from 'axios';
 import '@/assets/css/common.css'
+import './assets/common'
 
 axios.defaults.transformRequest = [function (data) {
   let newData = ''
@@ -22,7 +23,13 @@ axios.interceptors.request.use(function (config) {
 Vue.use(MintUI)
 Vue.prototype.axios=axios;
 
-
+router.beforeEach((to, from, next) => {
+  /* 路由发生变化修改页面title */
+  if (to.meta.title) {
+    document.title = to.meta.title;
+  }
+  next();
+})
 
 new Vue({
   el: '#app',

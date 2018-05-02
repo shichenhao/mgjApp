@@ -64,13 +64,13 @@
     methods:{
       getInit(){
         Indicator.open('加载中...');
-        this.axios.post('/merchantClient/findExpressOrderList',addToken()).then((res)=>{//查询数据
+        this.axios.post('/express/merchantClient/findExpressOrderList',addToken()).then((res)=>{//查询数据
           this.list=res.data.value
           Indicator.close()
         })
       },
       take(id){    //取件
-        this.axios.post('/merchantClient/batchDoneExpressOrder',addToken({ids:id})).then((res)=>{//查询数据
+        this.axios.post('/express/merchantClient/batchDoneExpressOrder',addToken({ids:id})).then((res)=>{//查询数据
           Indicator.close()
           MessageBox('提示', '操作成功！');
         })
@@ -82,7 +82,7 @@
           start+1;
           this.loading = true;
           setTimeout(() => {
-            this.axios.post('/merchantClient/findExpressOrderList',addToken({start})).then((res)=>{//寄送时间
+            this.axios.post('/express/merchantClient/findExpressOrderList',addToken({start})).then((res)=>{//寄送时间
               this.list.list=[...this.list.list, ...res.data.value.list]
             })
             this.loading = false;

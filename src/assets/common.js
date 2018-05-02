@@ -16,7 +16,7 @@ if(window.YLJsBridge){
 
 }
 
-window.alert = function(msg){
+window.alertApp = function(msg){
   if(window.YLJsBridge) {
     YLJsBridge.call('alert',
       {

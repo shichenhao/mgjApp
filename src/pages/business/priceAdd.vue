@@ -65,12 +65,12 @@
       getInit(){    //初始化数据
         Indicator.open('加载中...');
         let id = this.$router.history.current.params.id
-        this.axios.post('/public/findRegionDataDTOList').then((res)=>{
+        this.axios.post('/express/public/findRegionDataDTOList').then((res)=>{
           this.provinceList=res.data.value
           Indicator.close();
           if(id !=0){ //查询详情
             Indicator.open('加载中...');
-            this.axios.post('/merchantClient/findExpressPrice',addToken({id})).then((res)=>{
+            this.axios.post('/express/merchantClient/findExpressPrice',addToken({id})).then((res)=>{
               Indicator.close();
               this.params=res.data.value
               this.params.id=id
@@ -101,7 +101,7 @@
         }).toString() : ''
 
 
-        this.axios.post('/merchantClient/createOrMergeExpressPrice',addToken(this.params)).then((res)=>{
+        this.axios.post('/express/merchantClient/createOrMergeExpressPrice',addToken(this.params)).then((res)=>{
           Indicator.close();
           alert('操作成功！');
           this.$router.push(`/business/price`);

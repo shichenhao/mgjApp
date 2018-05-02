@@ -8,15 +8,8 @@
 
 <script>
 
-  import vHead from './components/common/Header.vue';
-  import './assets/common'
-  export default {
-      components:{
-          vHead
-      }
-  }
   function pgScale(){
-    var deviceWidth = document.documentElement.clientWidth;
+    let deviceWidth = document.documentElement.clientWidth;
     if(deviceWidth > 750) deviceWidth = 750;
       document.documentElement.style.fontSize = deviceWidth / 7.5 + 'px';
   }

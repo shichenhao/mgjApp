@@ -41,7 +41,7 @@
           this.loading = true;
           setTimeout(() => {
             this.total=0
-            this.axios.post('/userClient/findExpressQueryListByUserId',addToken({start})).then((res)=>{//寄送时间
+            this.axios.post('/express/userClient/findExpressQueryListByUserId',addToken({start})).then((res)=>{//寄送时间
               if(res.data.value.length){
                 this.total=res.data.value.length
               }else{

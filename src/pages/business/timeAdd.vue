@@ -105,7 +105,7 @@
         let id = this.$router.history.current.params.id
         if(id !=0){ //查询详情
           Indicator.open('加载中...');
-          this.axios.post('/merchantClient/findExpressTime',addToken({id})).then((res)=>{
+          this.axios.post('/express/merchantClient/findExpressTime',addToken({id})).then((res)=>{
             Indicator.close();
             this.addParams=res.data.value
             this.addParams.id=id
@@ -176,7 +176,7 @@
 
         this.addParams.serviceDay = '日期转数字'.filtersDays(this.addParams.serviceDay)
 
-        this.axios.post('/merchantClient/createOrMergeExpressTime',addToken(this.addParams)).then((res)=>{
+        this.axios.post('/express/merchantClient/createOrMergeExpressTime',addToken(this.addParams)).then((res)=>{
           Indicator.close();
           if(res.data.success){
             this.$router.push(`/business/time`);
@@ -202,7 +202,7 @@
       },*/
     },
     created(){
-      this.getInit()
+      this.getInit();
     }
   }
 </script>

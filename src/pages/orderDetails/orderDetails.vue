@@ -26,7 +26,7 @@
     },
     methods:{
       getInit(){//查询订单详情
-        this.axios.post('/userClient/findExpressByCompanyAndNumber',addToken(this.$router.history.current.params)).then((res)=>{//商家列表
+        this.axios.post('/express/userClient/findExpressByCompanyAndNumber',addToken(this.$router.history.current.params)).then((res)=>{//商家列表
           this.detail=JSON.parse(res.data.value.result)
           console.log(JSON.parse(res.data.value.result))
         })

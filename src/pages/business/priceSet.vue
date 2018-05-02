@@ -3,11 +3,12 @@
          v-infinite-scroll="loadMore"
          infinite-scroll-disabled="loading"
          infinite-scroll-distance="20">
-        <a @click="editState(true)">编辑</a>
-        <a @click="editState()">完成</a>
         <div :class="{checkboxSelect:edit}">
+            <!--a @click="editState(true)">编辑</a>
+            <a @click="editState()">完成</a-->
             <dl v-for="(item, index) in list.list">
-                <i v-if="edit" class="checkbox" @click="itemSelect(index)" :class="{active:item.select}" :key="index"></i>
+                <i v-if="edit" class="checkbox" @click="itemSelect(index)" :class="{active:item.select}"
+                   :key="index"></i>
                 <dt @click="goItem(item.id)">
                     <span>{{item.consignerProvinceName}} —</span>
                     <span class="address">
@@ -35,7 +36,8 @@
                 </dd>
             </dl>
             <div class="loadingCenter" v-show="loading">
-                <mt-spinner type="fading-circle" color="#26a2ff"></mt-spinner> 加载中
+                <mt-spinner type="fading-circle" color="#26a2ff"></mt-spinner>
+                加载中
             </div>
         </div>
         <div v-show="!edit" class="btn">
@@ -50,26 +52,32 @@
     </div>
 </template>
 <script>
-  import { Indicator } from 'mint-ui';
+  import {Indicator} from 'mint-ui';
   export default {
     name: 'priceList',
     data () {
       return {
-        loading:false,
-        edit:false,
-        selectAlll:false, //全选
-        pageIndex:1,
-        list:[],
-        selectAll:[], //选中的数据
-        params:{
-        }
+        loading: false,
+        edit: false,
+        selectAlll: false, //全选
+        pageIndex: 1,
+        list: [],
+        selectAll: [], //选中的数据
+        params: {}
       }
     },
-    methods:{
+    methods: {
       getInit(){
+        let _this = this;
+        // 右上角点击方法
+        window.rightItemClick=function(){
+          _this.editState(!_this.edit)
+          _this.rightTop();
+        }
+        this.selectAll = [];
         Indicator.open('加载中...');
-        this.axios.post('/merchantClient/findExpressPriceList',addToken()).then((res)=>{//查询数据
-          this.list=res.data.value
+        this.axios.post('/express/merchantClient/findExpressPriceList', addToken()).then((res) => {//查询数据
+          this.list = res.data.value
           Indicator.close()
         })
       },
@@ -77,34 +85,34 @@
         this.$router.push(`/business/price/add/${id}`);
       },
       editState(type){ //编辑 显示复选框
-        this.edit=type || false
+        this.edit = type || false
       },
       itemSelect(id, type){ //选中的数据
         let newVal = this.list.list[id]
-        if(type){
-          newVal.select=this.selectAlll
-          if(this.selectAlll){
+        if (type) {
+          newVal.select = this.selectAlll
+          if (this.selectAlll) {
             this.selectAll.push(newVal)
-          }else{
-            this.selectAll=[]
+          } else {
+            this.selectAll = []
           }
-        }else{
-          newVal.select=!this.list.list[id].select
+        } else {
+          newVal.select = !this.list.list[id].select
           // 选择添加到选中的列表中 否则从列表中删除
-          if(this.list.list[id].select){
+          if (this.list.list[id].select) {
             this.selectAll.push(this.list.list[id])
-          }else{
-            this.selectAll=this.selectAll.filter((item)=>{
+          } else {
+            this.selectAll = this.selectAll.filter((item) => {
               return item.select
             })
           }
           // 如果都选择则全选按钮选中
-          if(this.list.list.every((item)=>{
-              return item.select==true
-            })){
-            this.selectAlll=true
-          }else{
-            this.selectAlll=false
+          if (this.list.list.every((item) => {
+              return item.select == true
+            })) {
+            this.selectAlll = true
+          } else {
+            this.selectAlll = false
           }
 
         }
@@ -112,34 +120,55 @@
 
       },
       handleSelectAll(){ //全选
-        this.selectAll=[]
-        this.selectAlll=!this.selectAlll
-        this.list.list.map((item,index)=>{
+        this.selectAll = []
+        this.selectAlll = !this.selectAlll
+        this.list.list.map((item, index) => {
           this.itemSelect(index, true)
         })
       },
       deletes(state){    //删除
-        if(state >= 1){
-            console.log(this.selectAll)
+        if (state >= 1) {
+          Indicator.open('删除中...');
+          //选中的数组转换成字符串
+          let ids = this.selectAll.map(item=>{
+            return item.id
+          }).toString();
+          this.axios.post('/express/merchantClient/batchRemoveExpressPrice', addToken({ids})).then((res) => {
+            if (res.data.success) {
+              Indicator.close();
+              alert('删除成功!');
+              this.getInit();
+            }
+          })
         }
       },
       loadMore() { //下拉加载数据
-        let start= this.pageIndex
-        if(this.list.total/(start*20)>1){
-            this.pageIndex=start+1;
-            start+1;
-            this.loading = true;
-            setTimeout(() => {
-                this.axios.post('/merchantClient/findExpressPriceList',addToken({start})).then((res)=>{//寄送时间
-                  this.list.list=[...this.list.list, ...res.data.value.list]
-                })
-                this.loading = false;
-             }, 1500);
+        let start = this.pageIndex
+        if (this.list.total / (start * 20) > 1) {
+          this.pageIndex = start + 1;
+          start + 1;
+          this.loading = true;
+          setTimeout(() => {
+            this.axios.post('/express/merchantClient/findExpressPriceList', addToken({start})).then((res) => {//寄送时间
+              this.list.list = [...this.list.list, ...res.data.value.list]
+            })
+            this.loading = false;
+          }, 500);
+        }
+      },
+      rightTop(){ // 右上角显示文字
+        let _this=this;
+        if(window.YLJsBridge){
+            YLJsBridge.call('showRightItem',{isShow:true,message:!_this.edit ? '编辑' : '完成'})
         }
       }
     },
     created(){
-      this.getInit()
+      this.rightTop();
+      this.getInit();
+    },
+    beforeDestroy(){
+      YLJsBridge.call('showRightItem',{isShow:false,message:''})
     }
   }
 </script>

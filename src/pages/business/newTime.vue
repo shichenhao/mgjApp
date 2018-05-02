@@ -3,8 +3,8 @@
         v-infinite-scroll="loadMore"
         infinite-scroll-disabled="loading"
         infinite-scroll-distance="20">
-        <a @click="editState(true)">编辑</a>
-        <a @click="editState()">完成</a>
+        <!--a @click="editState(true)">编辑</a>
+        <a @click="editState()">完成</a-->
         <div :class="{checkboxSelect:edit}">
             <div class="serviceDate" v-for="(item, index) in list.list">
                 <i v-if="edit" class="checkbox" @click="itemSelect(index)" :class="{active:item.select}" :key="index"></i>
@@ -46,14 +46,20 @@
         pageIndex:1,
         list:[],
         selectAll:[], //选中的数据
-        params:{
-        }
+        params:{}
       }
     },
     methods:{
       getInit(){
+        let _this = this;
+        // 右上角点击方法
+        window.rightItemClick=function(){
+          _this.editState(!_this.edit)
+          _this.rightTop();
+        }
+        this.selectAll = [];
         Indicator.open('加载中...');
-        this.axios.post('/merchantClient/findExpressTimeListByPage',addToken()).then((res)=>{//查询数据
+        this.axios.post('/express/merchantClient/findExpressTimeListByPage',addToken()).then((res)=>{//查询数据
           this.list=res.data.value
           Indicator.close()
         })
@@ -105,7 +111,18 @@
       },
       deletes(state){    //删除
         if(state >= 1){
-          console.log(this.selectAll)
+          Indicator.open('删除中...');
+          //选中的数组转换成字符串
+          let ids = this.selectAll.map(item=>{
+            return item.id
+          }).toString();
+          this.axios.post('/express/merchantClient/batchRemoveExpressTime', addToken({ids})).then((res) => {
+            if(res.data.isSuccess){
+              Indicator.close();
+              alert('删除成功!');
+              this.getInit();
+            }
+          })
         }
       },
       loadMore() { //下拉加载数据
@@ -115,16 +132,26 @@
           start+1;
           this.loading = true;
           setTimeout(() => {
-            this.axios.post('/merchantClient/findExpressTimeListByPage',addToken({start})).then((res)=>{//寄送时间
+            this.axios.post('/express/merchantClient/findExpressTimeListByPage',addToken({start})).then((res)=>{//寄送时间
               this.list.list=[...this.list.list, ...res.data.value.list]
             })
             this.loading = false;
           }, 1500);
         }
+      },
+      rightTop(){ // 右上角显示文字
+        let _this=this;
+        if(window.YLJsBridge){
+          YLJsBridge.call('showRightItem',{isShow:true,message:!_this.edit ? '编辑' : '完成'})
+        }
       }
     },
     created(){
-      this.getInit()
+      this.rightTop();
+      this.getInit();
+    },
+    beforeDestroy(){
+      YLJsBridge.call('showRightItem',{isShow:false,message:''})
     }
   }
 </script>
