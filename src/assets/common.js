@@ -3,7 +3,7 @@
 if(window.YLJsBridge){
   setTimeout(()=>{
     YLJsBridge.call('getToken','',function(a){
-      //alert(a.value)
+      alert(a.value)
       sessionStorage.setItem("token",a.value)
       //sessionStorage.setItem("token",'78c8001ccbdc40fb9370b66a35304b9e')
       YLJsBridge.call('getAgentId','',function(b){
@@ -12,7 +12,7 @@ if(window.YLJsBridge){
     })
   },100)
 }else{
-  sessionStorage.setItem("token",'78c8001ccbdc40fb9370b66a35304b9e')//9e14fa2051b641ebbbfc6c805908cd2a
+  sessionStorage.setItem("token",'86eca9fb328b4d46a840400aa4da5c52')//9e14fa2051b641ebbbfc6c805908cd2a
 
 }
 

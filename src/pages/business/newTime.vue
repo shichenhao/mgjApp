@@ -2,12 +2,17 @@
     <div class="newTime"
         v-infinite-scroll="loadMore"
         infinite-scroll-disabled="loading"
-        infinite-scroll-distance="20">
-        <!--a @click="editState(true)">编辑</a>
-        <a @click="editState()">完成</a-->
+        infinite-scroll-distance="20"><!--
+        <a @click="editState(true)">编辑</a>
+        <a @click="editState()">完成</a>-->
         <div :class="{checkboxSelect:edit}">
-            <div class="serviceDate" v-for="(item, index) in list.list">
+            <div class="serviceDate" v-for="(item, index) in list">
                 <i v-if="edit" class="checkbox" @click="itemSelect(index)" :class="{active:item.select}" :key="index"></i>
+                <i @click="deletes(item)">
+                    {{
+                        item.status === 0 ? '未启用' : '启用'
+                    }}
+                </i>
                 <div @click="goItem(item.id)">
                     <div class="tit">
                         <span>服务日期：</span>
@@ -53,13 +58,13 @@
       getInit(){
         let _this = this;
         // 右上角点击方法
-        window.rightItemClick=function(){
+        /*window.rightItemClick=function(){
           _this.editState(!_this.edit)
           _this.rightTop();
-        }
+        }*/
         this.selectAll = [];
         Indicator.open('加载中...');
-        this.axios.post('/express/merchantClient/findExpressTimeListByPage',addToken()).then((res)=>{//查询数据
+        this.axios.post('/express/merchantClient/findExpressTimeList',addToken()).then((res)=>{//查询数据
           this.list=res.data.value
           Indicator.close()
         })
@@ -109,21 +114,18 @@
           this.itemSelect(index, true)
         })
       },
-      deletes(state){    //删除
-        if(state >= 1){
-          Indicator.open('删除中...');
+      deletes(item){    //删除
+          Indicator.open('修改中...');
+          let newItem = JSON.parse(JSON.stringify(item));
+          newItem.status= newItem.status === 0 ? 1 : 0;
           //选中的数组转换成字符串
-          let ids = this.selectAll.map(item=>{
-            return item.id
-          }).toString();
-          this.axios.post('/express/merchantClient/batchRemoveExpressTime', addToken({ids})).then((res) => {
-            if(res.data.isSuccess){
+          this.axios.post('/express/merchantClient/createOrMergeExpressTime', addToken(newItem)).then((res) => {
+            if(res.data.success){
               Indicator.close();
-              alert('删除成功!');
+              alert('修改成功!');
               this.getInit();
             }
           })
-        }
       },
       loadMore() { //下拉加载数据
         let start= this.pageIndex
@@ -132,7 +134,7 @@
           start+1;
           this.loading = true;
           setTimeout(() => {
-            this.axios.post('/express/merchantClient/findExpressTimeListByPage',addToken({start})).then((res)=>{//寄送时间
+            this.axios.post('/express/merchantClient/findExpressTimeList',addToken()).then((res)=>{//寄送时间
               this.list.list=[...this.list.list, ...res.data.value.list]
             })
             this.loading = false;
@@ -147,11 +149,11 @@
       }
     },
     created(){
-      this.rightTop();
+      //this.rightTop();
       this.getInit();
     },
     beforeDestroy(){
-      YLJsBridge.call('showRightItem',{isShow:false,message:''})
+      //YLJsBridge.call('showRightItem',{isShow:false,message:''})
     }
   }
 </script>

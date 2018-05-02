@@ -74,9 +74,8 @@
       },
       payment(){    //付款
         let _this=this
-        YLJsBridge.call('pay',{orderId:_this.orderInfo.id},function(a){
-          alert(a)
-        })
+        console.log(this.orderInfo.id)
+        YLJsBridge.call('pay',{orderId:_this.orderInfo.id})
       }
     },
     created(){

@@ -2,7 +2,7 @@
     <div>
         <ul class="list_menu bgfff">
             <li :class="{on:state}" @click="tabState(true)">
-                <strong>寄快递</strong>
+                <strong>寄快递{{ priceNum }}</strong>
             </li>
             <li :class="{on:!state}" @click="tabState(false)">
                 <strong>查快递</strong>
@@ -65,7 +65,7 @@
                 <div class="submit_cent">
                     <a class="submit_r" @click="goSend()">我要寄件</a>
                     <p>
-                        费用预估<b>{{ priceNum }}元</b><br> <router-link to="/postage">价格计算规则</router-link>
+                        费用预估<b>{{ price }}元</b><br> <router-link to="/postage">价格计算规则</router-link>
                     </p>
                 </div>
             </div>
@@ -200,13 +200,14 @@
                 popParams:{
                     pickUpTime:null,
                     remark:null,
-                }
+                },
+                price:0
             }
         },
         computed: {
             priceNum() {
                 if (this.priceParam.merchantId && this.priceParam.consignerProvinceName && this.priceParam.consigneeProvinceName) {
-                    return this.getPrice()
+                    this.getPrice()
                 } else {
                   return 0
                 }
@@ -214,7 +215,7 @@
         },
         methods:{
             getInit(){
-                this.axios.post('/express/userClient/findExpressMerchantList',{agentId: sessionStorage.getItem('agentId') || 206}).then((res)=>{//商家列表
+                this.axios.post('/express/userClient/findExpressMerchantList',{agentId: 206}).then((res)=>{//商家列表
                   this.courierLists=res.data.value
                 })
             },
@@ -232,22 +233,32 @@
                 })
             },
             selectAddress(type){//选择地址
+                let myGeo = new BMap.Geocoder();
+
                 let _this=this
                 YLJsBridge.call('selectAddress',{codeType:2},function(string){
-                    let obj = JSON.parse(string.value)
+                      // 根据坐标得到地址描述
+                     let obj = JSON.parse(string.value)
+                      myGeo.getLocation(new BMap.Point(obj.longitude, obj.latitude), function(result){
+                        if (result){
+                          if(type == 1){
+                            _this.priceParam.consignerProvinceName = result.addressComponents.city
+                          } else if(type == 2){
+                            _this.priceParam.consigneeProvinceName = result.addressComponents.city
+                          }
+                        }
+                      });
                     if(type == 1){
                       _this.params.consignerAddressId  = obj.id
                       _this.params.consignerAddress = obj.address
                       _this.params.consignerHouseNumber = obj.address
                       _this.params.consignerName = obj.name
-                      _this.priceParam.consignerProvinceName = obj.name
                       _this.params.consignerMobile = obj.mobile
                     }else if(type==2) {
                       _this.params.consigneeAddressId = obj.id
                       _this.params.consigneeAddress = obj.address
                       _this.params.consigneerHouseNumber = obj.address
                       _this.params.consigneeName = obj.name
-                      _this.priceParam.consigneeProvinceName = obj.name
                       _this.params.consigneeMobile = obj.mobile
                     }
                 })
@@ -358,6 +369,7 @@
                 this.openCourier=false
                 if(state==1){ // 1寄快递 2查快递
                     this.params.merchantId=checked && checked.id
+                    this.priceParam.merchantId=checked && checked.id
                     this.params.merchantName=checked && checked.name
                     this.getTimes()
                 } else if(state==2){
@@ -410,9 +422,9 @@
             },
             getPrice(){ //获取价格费用
                 this.axios.post('/express/userClient/findExpressPrice',this.priceParam).then((res)=>{
-                    console.log(res.data);
-                    this.params.price=res.data;
-                    return res.data
+                    this.params.price=res.data.value.price;
+                    this.price=res.data.value.price;
+                    //return res.data.value.price
                 })
             }
         },

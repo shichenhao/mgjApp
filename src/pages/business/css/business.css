@@ -17,6 +17,13 @@
     position: relative;
 }
 
+.serviceDate i{
+    position: absolute;
+    font-size: .3rem;
+    right: .44rem;
+    top: .42rem;
+}
+
 
 .newTime .tit{
     font-size:0.3rem;
@@ -196,6 +203,7 @@
     background:#fff;
     border:1px solid #f1f1f1;
     padding:0.4rem 0.36rem;
+    transition: .2s;
 }
 .priceSet dl dt{
     color:#333;

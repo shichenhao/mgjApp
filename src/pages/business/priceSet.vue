@@ -4,12 +4,12 @@
          infinite-scroll-disabled="loading"
          infinite-scroll-distance="20">
         <div :class="{checkboxSelect:edit}">
-            <!--a @click="editState(true)">编辑</a>
-            <a @click="editState()">完成</a-->
-            <dl v-for="(item, index) in list.list">
+            <!--<a @click="editState(true)">编辑</a>
+            <a @click="editState()">完成</a>-->
+            <dl v-for="(item, index) in list.list" @click="goItem(item.id)">
                 <i v-if="edit" class="checkbox" @click="itemSelect(index)" :class="{active:item.select}"
                    :key="index"></i>
-                <dt @click="goItem(item.id)">
+                <dt>
                     <span>{{item.consignerProvinceName}} —</span>
                     <span class="address">
                         <i>{{item.consigneeProvinceName}}</i>
@@ -82,7 +82,9 @@
         })
       },
       goItem(id){ //跳转到详情
-        this.$router.push(`/business/price/add/${id}`);
+        if(!this.edit){
+            this.$router.push(`/business/price/add/${id}`);
+        }
       },
       editState(type){ //编辑 显示复选框
         this.edit = type || false
