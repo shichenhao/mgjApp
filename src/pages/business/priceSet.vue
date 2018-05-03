@@ -150,12 +150,12 @@
           this.pageIndex = start + 1;
           start + 1;
           this.loading = true;
-          setTimeout(() => {
+          //setTimeout(() => {
             this.axios.post('/express/merchantClient/findExpressPriceList', addToken({start})).then((res) => {//寄送时间
               this.list.list = [...this.list.list, ...res.data.value.list]
             })
             this.loading = false;
-          }, 500);
+          //}, 500);
         }
       },
       rightTop(){ // 右上角显示文字

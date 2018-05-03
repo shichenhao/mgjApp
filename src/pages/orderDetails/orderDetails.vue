@@ -1,8 +1,8 @@
 <template>
     <div>
         <dl class="orderDetails_top clearfix">
-            <dt><img src="../../assets/images/icon4.jpg" width="100%"></dt>
-            <dd>韵达快递：{{detail.number}}</dd>
+            <dt><img src="../../assets/images/default.png" width="100%"></dt>
+            <dd>{{ name && name +":"+ detail.number}}</dd>
         </dl>
         <div class="orderDetails_tit">快递信息</div>
         <div class="orderDetails_list">
@@ -16,18 +16,23 @@
     </div>
 </template>
 <script>
+  import { Indicator } from 'mint-ui';
   export default {
     name: 'orderDetail',
     data () {
       return {
         detail:{},
+        name:null,
         state:null
       }
     },
     methods:{
       getInit(){//查询订单详情
+        Indicator.open('查询中...');
         this.axios.post('/express/userClient/findExpressByCompanyAndNumber',addToken(this.$router.history.current.params)).then((res)=>{//商家列表
-          this.detail=JSON.parse(res.data.value.result)
+          Indicator.close();
+          this.detail = JSON.parse(res.data.value.result)
+          this.name = res.data.value.name
           console.log(JSON.parse(res.data.value.result))
         })
       }

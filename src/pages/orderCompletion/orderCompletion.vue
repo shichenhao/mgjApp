@@ -8,7 +8,7 @@
             </b>
         </div>
         <dl class="orderCompletion_dl clearfix">
-            <dt><img src="../../assets/images/icon4.jpg" width="100%"></dt>
+            <dt><img src="../../assets/images/default.png" width="100%"></dt>
             <dd><b>{{orderInfo.expressMerchantName}}</b><br />订单号：{{orderInfo.id}}<br />下单时间：{{orderInfo.createTime}}</dd>
         </dl>
         <div class="orderC_list">
@@ -53,16 +53,19 @@
     </div>
 </template>
 <script>
+  import { Indicator } from 'mint-ui';
   export default {
     name: 'orderOver',
     data () {
       return {
-        orderInfo:{}
+        orderInfo:null
       }
     },
     methods:{
       getInit(){//查询订单
+        Indicator.open('查询中...');
         this.axios.post('/express/userClient/findExpressOrderById',addToken({id:this.$router.history.current.params.id})).then((res)=>{//商家列表
+          Indicator.close();
           this.orderInfo=res.data.value
           if(new Date().getTime() > new Date(res.data.value.paymentExpireTime).getTime()){
             this.orderInfo.status = -1
@@ -75,7 +78,9 @@
       payment(){    //付款
         let _this=this
         console.log(this.orderInfo.id)
-        YLJsBridge.call('pay',{orderId:_this.orderInfo.id})
+        YLJsBridge.call('pay',{orderId:_this.orderInfo.id},function(a){
+          _this.getInit()
+        })
       }
     },
     created(){

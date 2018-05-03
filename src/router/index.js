@@ -26,6 +26,9 @@ export default new Router({
       path: '/',
       name: 'index',
       component: index,
+      meta: {
+        title: '快递'
+      }
     },
     {
       path: '/looked',
@@ -49,7 +52,7 @@ export default new Router({
       component: courierList
     },
     {
-      path: '/orderDetails/:number/:company',
+      path: '/orderDetails/:number/:company/:name',
       name: 'orderDetails',
       component: orderDetails,
       meta: {

@@ -3,7 +3,7 @@
         <div class="orderManage" v-for="item in list.list">
             <div class="tit">
                 <div class="code">{{ item.id }}</div>
-                <div class="state">{{ '状态'.takeFilter(item.status) }}</div>
+                <div class="state">{{ '状态'.statusFilter(item.status) }}</div>
             </div>
             <div class="address">
                 <div class="send">
@@ -37,7 +37,7 @@
                     <div class="right message"><span class="date">{{ item.pickUpTime}}</span></div>
                 </div>
             </div>
-            <div class="btns">
+            <div class="btns" v-if="item.status==2">
                 <div @click="take(item.id)" class="takeBtn">取件</div>
             </div>
         </div>
@@ -72,7 +72,7 @@
       take(id){    //取件
         this.axios.post('/express/merchantClient/batchDoneExpressOrder',addToken({ids:id})).then((res)=>{//查询数据
           Indicator.close()
-          MessageBox('提示', '操作成功！');
+          MessageBox('提示', '取件成功！');
         })
       },
       loadMore() { //下拉加载数据
@@ -81,12 +81,12 @@
           this.pageIndex=start+1;
           start+1;
           this.loading = true;
-          setTimeout(() => {
+          //setTimeout(() => {
             this.axios.post('/express/merchantClient/findExpressOrderList',addToken({start})).then((res)=>{//寄送时间
               this.list.list=[...this.list.list, ...res.data.value.list]
             })
             this.loading = false;
-          }, 1500);
+          //}, 1500);
         }
       }
     },

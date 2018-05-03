@@ -1,20 +1,21 @@
 //sessionStorage.setItem("token",'b7dd6865e6d244979ddc2f10c80a5782')//babcb87a9a014bc2a01cef0572566e1e,用户b7dd6865e6d244979ddc2f10c80a5782,管理78c8001ccbdc40fb9370b66a35304b9e
 
-if(window.YLJsBridge){
+//if(window.YLJsBridge){
   setTimeout(()=>{
     YLJsBridge.call('getToken','',function(a){
-      alert(a.value)
+      //alert(a.value)
       sessionStorage.setItem("token",a.value)
       //sessionStorage.setItem("token",'78c8001ccbdc40fb9370b66a35304b9e')
       YLJsBridge.call('getAgentId','',function(b){
+        //alert(b.value)
         sessionStorage.setItem("agentId",b.value)
       })
     })
-  },100)
-}else{
-  sessionStorage.setItem("token",'86eca9fb328b4d46a840400aa4da5c52')//9e14fa2051b641ebbbfc6c805908cd2a
+  },500)
+/*}else{
+  sessionStorage.setItem("token",'78c8001ccbdc40fb9370b66a35304b9e')//9e14fa2051b641ebbbfc6c805908cd2a
 
-}
+}*/
 
 window.alertApp = function(msg){
   if(window.YLJsBridge) {
@@ -172,3 +173,10 @@ String.prototype.takeFilter=function(state){
   }
   return text
 }
+String.prototype.expressName = function (cody) {
+  let obj = JSON.parse(localStorage.getItem("express")) || {}
+  console.log(obj)
+  return obj[cody] || cody
+}
+
+window.expressName = JSON.parse(localStorage.getItem("express")) || {};

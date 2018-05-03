@@ -7,7 +7,7 @@
             <div class="order_top clearfix">
                 <a class="order_xq">详情</a>
                 <dl>
-                    <dt><img src="../../assets/images/icon4.jpg" width="100%"></dt>
+                    <dt><img src="../../assets/images/default.png" width="100%"></dt>
                     <dd>{{item.expressMerchantName}}<br>订单号：{{item.id}}</dd>
                 </dl>
             </div>
@@ -43,14 +43,14 @@
           this.pageIndex=start+1;
           start+1;
           this.loading = true;
-          setTimeout(() => {
+          //setTimeout(() => {
             this.total=0
             this.axios.post('/express/userClient/findExpressOrderListByUserId',addToken({start})).then((res)=>{//寄送时间
               this.total=res.data.value.length
               this.orderList=[...this.orderList, ...res.data.value]
             })
             this.loading = false;
-          }, 1500);
+          //}, 1500);
         }
       }
     }

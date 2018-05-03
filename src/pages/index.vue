@@ -1,8 +1,9 @@
 <template>
     <div>
+        <div>{{ priceNum }}</div>
         <ul class="list_menu bgfff">
             <li :class="{on:state}" @click="tabState(true)">
-                <strong>寄快递{{ priceNum }}</strong>
+                <strong>寄快递</strong>
             </li>
             <li :class="{on:!state}" @click="tabState(false)">
                 <strong>查快递</strong>
@@ -82,7 +83,7 @@
                             快递公司{{searchParams.company}}
                         </span>
                         <span v-if="searchParams.company" class="search_company">
-                            {{searchParams.companyName}}
+                            {{searchParams.name}}
                         </span>
                     </li>
                 </ul>
@@ -134,11 +135,21 @@
             position="bottom"
             style="width: 100%;">
             <div class="openPop">
-                <span class="floatL" @click="openMessagePop()">取消</span>
+                <span class="floatL">{{ popParams.remark ? popParams.remark.length : 0 }} | 20</span>
                 <span class="floatR" @click="openMessagePop(1);">确定</span>
             </div>
             <div class="openTextarea">
-                <textarea placeholder="给快递员留言" v-model="popParams.remark" ></textarea>
+                <div class="openTextareaBox">
+                    <textarea placeholder="请留言给快递员" v-model="popParams.remark" ></textarea>
+                </div>
+                <div class="openTextareaList">
+                    <span @click="openSelect('缺包装袋')">缺包装袋</span>
+                    <span @click="openSelect('缺文件袋')">缺文件袋</span>
+                    <span @click="openSelect('体积大')">体积大</span>
+                    <span @click="openSelect('要爬楼')">要爬楼</span>
+                    <span @click="openSelect('易碎品')">易碎品</span>
+                    <span @click="openSelect('不要打电话')">不要打电话</span>
+                </div>
             </div>
 
         </mt-popup>
@@ -169,12 +180,12 @@
                       flex: 1,
                       values: [],
                       className: 'slot1',
-                      textAlign: 'right'
+                      textAlign: 'center'
                     }, {
                       flex: 1,
                       values: [],
                       className: 'slot3',
-                      textAlign: 'left'
+                      textAlign: 'center'
                     }
                 ],
                 params:{
@@ -209,15 +220,28 @@
                 if (this.priceParam.merchantId && this.priceParam.consignerProvinceName && this.priceParam.consigneeProvinceName) {
                     this.getPrice()
                 } else {
-                  return 0
+                  return null
                 }
             }
         },
         methods:{
             getInit(){
-                this.axios.post('/express/userClient/findExpressMerchantList',{agentId: 206}).then((res)=>{//商家列表
-                  this.courierLists=res.data.value
-                })
+              let _this = this;
+              setTimeout(()=>{
+                if(window.YLJsBridge){
+                    YLJsBridge.call('getAgentId','',function(a){
+                      sessionStorage.setItem("agentId",a.value)
+                      //alert(a.value)
+                      _this.axios.post('/express/userClient/findExpressMerchantList',{agentId: a.value}).then((res)=>{//商家列表
+                        _this.courierLists=res.data.value
+                      })
+                    })
+                }else{
+                  this.axios.post('/express/userClient/findExpressMerchantList',{agentId: 3}).then((res)=>{//商家列表
+                    this.courierLists=res.data.value
+                  })
+                }
+              },1000)
             },
             scanning(){//扫码
                 let _this=this
@@ -285,11 +309,11 @@
                 })
             },
             tabState(state){//切换
-                if(!state){
+                /*if(!state){
                     document.title='查快递'
                 } else {
                     document.title='寄快递'
-                }
+                }*/
                 sessionStorage.setItem('state',state)
                 this.state=state
                 this.expressSstate=state ? 1 : 2
@@ -317,6 +341,9 @@
                 } else if (!this.checkbox){
                     alert('请同意服务协议！')
                     return false
+                } else if (!this.params.price || this.params.price === 0){
+                    alert('快递价格不能为0，请重新选择快递公司')
+                    return false
                 }
 
                 Indicator.open('下单中...');
@@ -330,14 +357,15 @@
                 this.params.consigneeAddress=1
                 this.params.consigneerHouseNumber=1
                 this.params.consigneeName=1
-                this.params.consigneeMobile=1*/
+                this.params.consigneeMobile=1
+                this.params.price=1
+                this.params.weight = 1;*/
                 this.params.paymentType = 1;
-                //this.params.price=1
-                this.params.weight = 1;
                 this.params.agentId = sessionStorage.getItem('agentId') || 206;
                 this.axios.post('/express/userClient/createExpressOrder',addToken(this.params)).then((res)=>{//商家列表
                     Indicator.close();
-                    this.$router.push('/order');
+                    //alert(res.data.value.id)
+                    this.$router.push(`/orderCompletion/${res.data.value.id}`);
                 }).catch((error) => {
                     Indicator.close();
                     alert(error.response.data.message);
@@ -363,36 +391,61 @@
                 this.popParams.pickUpDate='生成时间'.addDate(new Date(), '转换对应的数字'.filtersDays(values[0]))
             },
             openopenCourierPop() {//选择快递公司
-                this.openCourier=true
+                let _this = this;
+                window.rightItemClick=function(){
+                  _this.openCourier=false;
+                  YLJsBridge.call('showRightItem',{isShow:true,message:'订单'})
+                  window.rightItemClick=function(){
+                    _this.$router.push('/order');
+                  }
+                }
+                YLJsBridge.call('showRightItem',{isShow:true,message:'取消'})
+                this.openCourier=true;
+                document.title='快递公司';
             },
             popHides(checked, state){//选中的快递公司
-                this.openCourier=false
+                this.openCourier=false;
+                this.rightTop();
+                YLJsBridge.call('showRightItem',{isShow:true,message:'订单'})
+                document.title='快递';
                 if(state==1){ // 1寄快递 2查快递
                     this.params.merchantId=checked && checked.id
                     this.priceParam.merchantId=checked && checked.id
                     this.params.merchantName=checked && checked.name
                     this.getTimes()
                 } else if(state==2){
-                    this.searchParams.companyName=checked.name
+                    this.searchParams.name=checked.name
                     this.searchParams.company=checked.id
                 }
             },
             openMessagePop(state) {//显示留言
                 this.openMessage=!this.openMessage
                 if(state && state==1){
+                    if(this.popParams.remark.length > 20){
+                      alert('留言最多20位，请修改');
+                      this.openMessage=!this.openMessage
+                      return false;
+                    }
                     this.params.remark=this.popParams.remark
                 }
+            },
+            openSelect(txt){
+              this.popParams.remark = txt
+
             },
             searchExpress() {//查询快递
                 if(!this.searchParams.number){
                     alert('请输入快递单号！');
+                    return false;
+                }else if(!this.searchParams.company){
+                    alert('请选择快递公司！');
                     return false;
                 }
                 Indicator.open('查询中...');
                 this.axios.post('/express/userClient/findExpressByCompanyAndNumber',addToken(this.searchParams)).then((res)=>{//商家列表
                     Indicator.close();
                     if(res.data.success){
-                      this.$router.push(`/orderDetails/${this.searchParams.number}/${this.searchParams.company}`);
+                      this.$router.push(`/orderDetails/${this.searchParams.number}/${this.searchParams.company}/${this.searchParams.name}`);
                     }
                 }).catch((error)=>{
                     Indicator.close();
@@ -408,11 +461,17 @@
                 this.axios.post('/express/userClient/findExpressCompanyListByNumber',addToken(this.searchParams)).then((res)=>{//商家列表
                     Indicator.close();
                     if(res.data.success){
-                        this.searchParams={
-                            number:this.searchParams.number,
-                            companyName:res.data.value[0].name,
-                            company:res.data.value[0].code,
+                      if(res.data.value) {
+                        window.expressName[res.data.value[0].code] = res.data.value[0].name
+                        localStorage.setItem('express', JSON.stringify(window.expressName))
+                        this.searchParams = {
+                          number: this.searchParams.number,
+                          name: res.data.value[0].name,
+                          company: res.data.value[0].code,
                         }
+                      }else{
+                        alert('请输入正确的快递单号！')
+                      }
                         console.log(this.searchParams)
                     }
                 }).catch((error)=>{
@@ -423,19 +482,35 @@
             getPrice(){ //获取价格费用
                 this.axios.post('/express/userClient/findExpressPrice',this.priceParam).then((res)=>{
                     this.params.price=res.data.value.price;
+                    this.params.weight=res.data.value.weight;
                     this.price=res.data.value.price;
                     //return res.data.value.price
                 })
+            },
+            rightTop(){ // 右上角显示文字
+              if(window.YLJsBridge) {
+                YLJsBridge.call('showRightItem', {isShow: true, message: '订单'});
+              }else{
+                setTimeout(()=>{
+                  this.rightTop()
+                },800)
+              }
             }
         },
         created(){
             this.getInit();
-            if (!JSON.parse(sessionStorage.getItem('state'))){
-                document.title='查快递'
-            } else {
-                document.title='寄快递'
+        },
+        mounted(){
+            this.rightTop();
+            let _this=this;
+            // 右上角点击方法
+            window.rightItemClick=function(){
+              _this.$router.push('/order');
             }
         },
+        beforeDestroy(){
+            YLJsBridge.call('showRightItem',{isShow:false,message:''})
+        }
     }
 </script>
 <style scoped>

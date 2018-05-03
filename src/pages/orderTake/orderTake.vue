@@ -4,7 +4,7 @@
             <b>待取件</b>
         </div>
         <dl class="orderCompletion_dl clearfix">
-            <dt><img src="../../assets/images/icon4.jpg" width="100%"></dt>
+            <dt><img src="../../assets/images/default.png" width="100%"></dt>
             <dd><b>韵达快递</b><br />订单号：654564458452<br />下单时间：2018/03/13  13:24</dd>
         </dl>
         <div class="orderC_list">

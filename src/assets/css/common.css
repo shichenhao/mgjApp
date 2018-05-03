@@ -71,3 +71,14 @@ table {
 .clearfix:after{content: "";display: block; clear: both;}
 .mb20{margin-bottom:0.2rem;}
 .h200{height:2rem;}
+
+
+.picker-center-highlight:after,.picker-center-highlight:before{
+    background-color: #999;
+}
+.picker-item.picker-selected{
+    color: #333;
+}
+.picker-item{
+    color: #999;
+}

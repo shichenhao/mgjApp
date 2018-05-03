@@ -6,8 +6,9 @@
             </a>
         </mt-header>-->
         <div class="courierList clearfix">
+            <div class="noneExpress" v-if="!courier.length">该商户下没有快递信息</div>
             <dl @click="hide(item, expressSstate)" class="clearfix" v-for="item in courier">
-                <dt v-if="!item.identityImg"><img src="../../assets/images/icon4.jpg" width="100%"></dt>
+                <dt v-if="!item.identityImg"><img src="../../assets/images/default.png" width="100%"></dt>
                 <dt v-if="item.identityImg"><img :src="item.identityImg" width="100%" ></dt>
                 <dd>{{item.name}}</dd>
             </dl>

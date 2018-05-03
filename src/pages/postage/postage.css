@@ -4,7 +4,7 @@
     line-height:0.35rem;
     height:1.41rem;
     background:url(../../assets/images/order_popbg1.jpg) no-repeat;
-    background-size:100%;
+    background-size:100% auto;
     padding:0.55rem 0.34rem 0;
 }
 .postage_tit{
