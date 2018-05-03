@@ -1,6 +1,9 @@
 <template>
-    <div>
-        <div class="orderManage" v-for="item in list.list">
+    <div
+        v-infinite-scroll="loadMore"
+        infinite-scroll-disabled="loading"
+        infinite-scroll-distance="20">
+        <div class="orderManage" v-for="item in list">
             <div class="tit">
                 <div class="code">{{ item.id }}</div>
                 <div class="state">{{ '状态'.statusFilter(item.status) }}</div>
@@ -54,8 +57,9 @@
         loading:false,
         edit:false,
         selectAlll:false, //全选
-        pageIndex:1,
+        pageIndex:0,
         list:[],
+        total:20,
         selectAll:[], //选中的数据
         params:{
         }
@@ -76,14 +80,16 @@
         })
       },
       loadMore() { //下拉加载数据
-        let start= this.pageIndex
-        if(this.list.total/(start*20)>1){
-          this.pageIndex=start+1;
-          start+1;
+        if (this.total === 20) {
+          let newStart = this.pageIndex;
+          let start= (this.pageIndex*20);
+          this.pageIndex=newStart+1;
           this.loading = true;
+          this.total=0
           //setTimeout(() => {
             this.axios.post('/express/merchantClient/findExpressOrderList',addToken({start})).then((res)=>{//寄送时间
-              this.list.list=[...this.list.list, ...res.data.value.list]
+              this.list=[...this.list, ...res.data.value.list]
+              this.total=res.data.value.total
             })
             this.loading = false;
           //}, 1500);
@@ -91,7 +97,7 @@
       }
     },
     created(){
-      this.getInit()
+      //this.getInit()
     }
   }
 </script>

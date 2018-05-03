@@ -34,7 +34,7 @@
       return {
         loading:false,
         courierList:[],
-        pageIndex:1,
+        pageIndex:0,
         total:20
       }
     },
@@ -43,13 +43,13 @@
         this.$router.push(`/orderDetails/${number}/${company}/${name}`);
       },
       loadMore() { //下拉加载数据
-        let start= this.pageIndex
         if(this.total==20){
-          this.pageIndex=start+1;
-          start+1;
+          let newStart = this.pageIndex;
+          let start= (this.pageIndex*20);
+          this.pageIndex=newStart+1;
           this.loading = true;
           //setTimeout(() => {
-            this.total=0
+          this.total=0
             this.axios.post('/express/userClient/findExpressQueryListByUserId',addToken({start})).then((res)=>{//寄送时间
               if(res.data.value.length){
                 this.total=res.data.value.length

@@ -29,7 +29,7 @@
       return {
         loading:false,
         orderList:[],
-        pageIndex:1,
+        pageIndex:0,
         total:20
       }
     },
@@ -38,10 +38,10 @@
         this.$router.push(`/orderCompletion/${id}`);
       },
       loadMore() { //下拉加载数据
-        let start= this.pageIndex
         if(this.total==20){
-          this.pageIndex=start+1;
-          start+1;
+          let newStart = this.pageIndex;
+          let start= (this.pageIndex*20);
+          this.pageIndex=newStart+1;
           this.loading = true;
           //setTimeout(() => {
             this.total=0

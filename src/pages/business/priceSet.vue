@@ -6,7 +6,7 @@
         <div :class="{checkboxSelect:edit}">
             <!--<a @click="editState(true)">编辑</a>
             <a @click="editState()">完成</a>-->
-            <dl v-for="(item, index) in list.list" @click="goItem(item.id)">
+            <dl v-for="(item, index) in list" @click="goItem(item.id)">
                 <i v-if="edit" class="checkbox" @click="itemSelect(index)" :class="{active:item.select}"
                    :key="index"></i>
                 <dt>
@@ -60,8 +60,9 @@
         loading: false,
         edit: false,
         selectAlll: false, //全选
-        pageIndex: 1,
+        pageIndex: 0,
         list: [],
+        total: 20,
         selectAll: [], //选中的数据
         params: {}
       }
@@ -75,11 +76,12 @@
           _this.rightTop();
         }
         this.selectAll = [];
+        /*
         Indicator.open('加载中...');
         this.axios.post('/express/merchantClient/findExpressPriceList', addToken()).then((res) => {//查询数据
           this.list = res.data.value
           Indicator.close()
-        })
+        })*/
       },
       goItem(id){ //跳转到详情
         if(!this.edit){
@@ -145,14 +147,16 @@
         }
       },
       loadMore() { //下拉加载数据
-        let start = this.pageIndex
-        if (this.list.total / (start * 20) > 1) {
-          this.pageIndex = start + 1;
-          start + 1;
+        if (this.total === 20) {
+          let newStart = this.pageIndex;
+          let start= (this.pageIndex*20);
+          this.pageIndex=newStart+1;
           this.loading = true;
+          this.total=0
           //setTimeout(() => {
             this.axios.post('/express/merchantClient/findExpressPriceList', addToken({start})).then((res) => {//寄送时间
-              this.list.list = [...this.list.list, ...res.data.value.list]
+              this.list = [...this.list, ...res.data.value.list];
+              this.total=res.data.value.total
             })
             this.loading = false;
           //}, 500);
