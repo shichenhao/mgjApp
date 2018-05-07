@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="orderCompletion_top" :class="{orderCompletion_top1 : orderInfo.status==3, orderCompletion_top2:orderInfo.status==2}">
+        <div class="orderCompletion_top" :class="{orderCompletion_top1 : orderInfo.status==4, orderCompletion_top2:orderInfo.status==3}">
             <b>
                 {{
                     '订单状态'.statusFilter(orderInfo.status)

@@ -147,9 +147,12 @@ String.prototype.statusFilter=function(state){
       text='待付款'
       break
     case 2:
-      text='代取件'
+      text='待确认'
       break
     case 3:
+      text='待取件'
+      break
+    case 4:
       text='已完成'
       break
     default:
@@ -165,7 +168,7 @@ String.prototype.takeFilter=function(state){
       text='已取件'
       break
     case 1:
-      text='代取件'
+      text='待取件'
       break
     default:
       text = ''
