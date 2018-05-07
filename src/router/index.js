@@ -52,7 +52,7 @@ export default new Router({
       component: courierList
     },
     {
-      path: '/orderDetails/:number/:company/:name',
+      path: '/orderDetails/:number/:company',
       name: 'orderDetails',
       component: orderDetails,
       meta: {

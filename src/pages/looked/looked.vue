@@ -40,7 +40,7 @@
     },
     methods:{
       goDetail(number, company, name){
-        this.$router.push(`/orderDetails/${number}/${company}/${name}`);
+        this.$router.push(`/orderDetails/${number}/${company}`);
       },
       loadMore() { //下拉加载数据
         if(this.total==20){

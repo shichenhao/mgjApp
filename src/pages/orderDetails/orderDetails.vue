@@ -28,8 +28,14 @@
     },
     methods:{
       getInit(){//查询订单详情
+        let { number,company } = this.$router.history.current.params;
+        let param={
+          number,
+          company,
+          name:sessionStorage.getItem('expressName')
+        }
         Indicator.open('查询中...');
-        this.axios.post('/express/userClient/findExpressByCompanyAndNumber',addToken(this.$router.history.current.params)).then((res)=>{//商家列表
+        this.axios.post('/express/userClient/findExpressByCompanyAndNumber',addToken(param)).then((res)=>{//商家列表
           Indicator.close();
           this.detail = JSON.parse(res.data.value.result)
           this.name = res.data.value.name

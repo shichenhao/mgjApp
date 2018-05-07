@@ -153,6 +153,9 @@
             </div>
 
         </mt-popup>
+        <!--{{
+            // priceParam.merchantId+':'+priceParam.consignerProvinceName+':'+priceParam.consigneeProvinceName
+        }}-->
     </div>
 </template>
 <script>
@@ -210,7 +213,7 @@
                 },
                 popParams:{
                     pickUpTime:null,
-                    remark:null,
+                    remark:'',
                 },
                 price:0
             }
@@ -430,7 +433,7 @@
                 }
             },
             openSelect(txt){
-              this.popParams.remark = txt
+              this.popParams.remark = this.popParams.remark + txt;
 
             },
             searchExpress() {//查询快递
@@ -444,8 +447,9 @@
                 Indicator.open('查询中...');
                 this.axios.post('/express/userClient/findExpressByCompanyAndNumber',addToken(this.searchParams)).then((res)=>{//商家列表
                     Indicator.close();
+                    sessionStorage.setItem('expressName',this.searchParams.name)
                     if(res.data.success){
-                      this.$router.push(`/orderDetails/${this.searchParams.number}/${this.searchParams.company}/${this.searchParams.name}`);
+                      this.$router.push(`/orderDetails/${this.searchParams.number}/${this.searchParams.company}`);
                     }
                 }).catch((error)=>{
                     Indicator.close();
@@ -480,11 +484,13 @@
                 })
             },
             getPrice(){ //获取价格费用
+                this.price=0
                 this.axios.post('/express/userClient/findExpressPrice',this.priceParam).then((res)=>{
                     this.params.price=res.data.value.price;
                     this.params.weight=res.data.value.weight;
                     this.price=res.data.value.price;
                     //return res.data.value.price
+                    //alert(res.data.value)
                 })
             },
             rightTop(){ // 右上角显示文字
