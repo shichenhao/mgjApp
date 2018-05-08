@@ -10,6 +10,7 @@ import orderPayment from '@/pages/orderPayment/orderPayment'
 import orderTake from '@/pages/orderTake/orderTake'
 import postage from '@/pages/postage/postage'
 import price from '@/pages/price/price'
+import agreement from '@/pages/agreement'
 //商家
 import business from '@/pages/business/'
 import priceSet from '@/pages/business/priceSet'
@@ -56,7 +57,7 @@ export default new Router({
       name: 'orderDetails',
       component: orderDetails,
       meta: {
-        title: '跟踪订单'
+        title: '查询结果'
       }
     },
     {
@@ -81,6 +82,14 @@ export default new Router({
       component: price,
       meta: {
         title: '价格计算规则'
+      }
+    },
+    {
+      path: '/agreement',
+      name: 'agreement',
+      component: agreement,
+      meta: {
+        title: '快递服务协议'
       }
     },
     // 商家

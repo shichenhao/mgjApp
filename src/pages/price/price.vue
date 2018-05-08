@@ -10,38 +10,55 @@
                 <th>基础重量</th>
                 <th width="29%">超重每公斤加价</th>
             </tr>
-            <tr>
-                <td>北京</td>
-                <td>河北</td>
-                <td>12元</td>
-                <td>1kg</td>
-                <td>2元</td>
+            <tr v-for="(item, index) in list" :class="{colore0e: index%2==1}" v-if="list.length">
+                <td>
+                    {{ item.consignerProvinceName }}
+                </td>
+                <td>
+                    {{ item.consigneeProvinceName }}
+                </td>
+                <td>
+                    {{ item.price }}元
+                </td>
+                <td>
+                    {{ item.weight }}kg
+                </td>
+                <td>
+                    {{ item.addPrice }}元
+                </td>
             </tr>
-            <tr class="colore0e">
-                <td>北京</td>
-                <td>河北</td>
-                <td>12元</td>
-                <td>1kg</td>
-                <td>2元</td>
-            </tr>
-            <tr>
-                <td>北京</td>
-                <td>河北</td>
-                <td>12元</td>
-                <td>1kg</td>
-                <td>2元</td>
-            </tr>
-            <tr class="colore0e">
-                <td>北京</td>
-                <td>河北</td>
-                <td>12元</td>
-                <td>1kg</td>
-                <td>2元</td>
+            <tr v-if="list.length==0">
+                <td colspan="5">该快递公司暂未提供价格信息</td>
             </tr>
         </table>
 
     </div>
 </template>
+<script>
+  import { Indicator } from 'mint-ui';
+  export default {
+    data(){
+      return {
+        list:[]
+      }
+    },
+    methods:{
+      getPrice(){
+        let merchantId = sessionStorage.getItem('merchantIdFirst')
+        this.axios.post('/express/userClient/findExpressPriceList',addToken({merchantId})).then((res)=>{//商家列表
+          Indicator.close();
+          this.list = res.data.value
+        }).catch((error) => {
+          Indicator.close();
+          alert(error.response.data.message);
+        })
+      }
+    },
+    created(){
+      this.getPrice()
+    }
+  }
+</script>
 <style scoped>
     @import "price.css";
 </style>

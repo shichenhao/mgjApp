@@ -17,7 +17,7 @@
                     <li class="clearfix">
                         <i></i>
                         <dl>
-                            <dt v-if="!params.consignerAddressId">你当前位置?</dt>
+                            <dt v-if="!params.consignerAddressId">从哪里寄？</dt>
                             <dd v-if="params.consignerAddressId">
                                 <strong>{{params.consignerName}}&nbsp;&nbsp;{{params.consignerMobile}}</strong>
                                 <p>{{params.consignerAddress}}</p>
@@ -28,7 +28,7 @@
                     <li class="clearfix">
                         <i></i>
                         <dl>
-                            <dt v-if="!params.consigneeAddressId">你当前位置?</dt>
+                            <dt v-if="!params.consigneeAddressId">你想寄到哪里？</dt>
                             <dd v-if="params.consigneeAddressId">
                                 <strong>{{params.consigneeName}}&nbsp;&nbsp;{{params.consigneeMobile}}</strong>
                                 <p>{{params.consigneeAddress}}</p>
@@ -59,14 +59,14 @@
             </ul>
             <div class='checkbox'>
                 <input type='checkbox' id='checkbox1' name='checkboox[]' v-model="checkbox">
-                <label for='checkbox1'>我已阅读并同意<a>《服务协议》</a></label>
+                <label for='checkbox1'>我已阅读并同意<router-link to="/agreement">《服务协议》</router-link></label>
             </div>
             <div class="h200"></div>
             <div class="submit_box">
                 <div class="submit_cent">
                     <a class="submit_r" @click="goSend()">我要寄件</a>
                     <p>
-                        费用预估<b>{{ price }}元</b><br> <router-link to="/postage">价格计算规则</router-link>
+                        费用预估<b>{{ price }}元</b><br> <a @click="storageDate('/price')">价格计算规则</a>
                     </p>
                 </div>
             </div>
@@ -102,7 +102,7 @@
                 </p>
                 <p>
                     ● 详细邮费计算规则，请点击底部按钮<br />
-                    <router-link to="/postage">‘价格计算规则’</router-link>
+                    <a @click="storageDate('/price')">‘价格计算规则’</a>
                 </p>
             </div>
             <div class="postage_stn">
@@ -154,7 +154,7 @@
 
         </mt-popup>
         <!--{{
-            // priceParam.merchantId+':'+priceParam.consignerProvinceName+':'+priceParam.consigneeProvinceName
+            priceParam.merchantId+':'+priceParam.consignerProvinceName+':'+priceParam.consigneeProvinceName
         }}-->
     </div>
 </template>
@@ -169,8 +169,8 @@
         data () {
             return {
                 state:JSON.parse(sessionStorage.getItem('state') || true), //true:寄件 , false:查件
-                postage:JSON.parse(localStorage.getItem('postage')) || false,//不再提示
-                checkbox:false, //同意协议
+                postage:JSON.parse(localStorage.getItem('postage')) || JSON.parse(sessionStorage.getItem('postage')) || false,//不再提示
+                checkbox:true, //同意协议
                 openDate:false,//显示时间弹窗
                 openCourier:false,//显示快递公司弹窗
                 openMessage:false,//显示留言弹窗
@@ -215,7 +215,7 @@
                     pickUpTime:null,
                     remark:'',
                 },
-                price:0
+                price:0,
             }
         },
         computed: {
@@ -228,7 +228,27 @@
             }
         },
         methods:{
+            clearStorage(){
+              //清除存储数据，保留token
+              let token = sessionStorage.getItem('token');
+              let merchantIdFirst = sessionStorage.getItem('merchantIdFirst');
+              sessionStorage.clear()
+              sessionStorage.setItem('token',token);
+              sessionStorage.setItem('merchantIdFirst',merchantIdFirst)
+            },
             getInit(){
+              if(sessionStorage.getItem('storageData')){
+                // 保存下单信息
+                this.params = JSON.parse(sessionStorage.getItem('storageData'));
+                this.getTimes();
+                this.popParams = JSON.parse(sessionStorage.getItem('popParams'));
+                this.params = JSON.parse(sessionStorage.getItem('storageData'));
+                this.checkbox = JSON.parse(sessionStorage.getItem('checkbox'));
+                //this.dataTimeLength = JSON.parse(sessionStorage.getItem('dataTimeLength'));
+                //this.dataTime = JSON.parse(sessionStorage.getItem('dataTime'));
+                //this.dayTims = JSON.parse(sessionStorage.getItem('dayTims'));
+                console.log(this.params)
+              }
               let _this = this;
               setTimeout(()=>{
                 if(window.YLJsBridge){
@@ -237,14 +257,25 @@
                       //alert(a.value)
                       _this.axios.post('/express/userClient/findExpressMerchantList',{agentId: a.value}).then((res)=>{//商家列表
                         _this.courierLists=res.data.value
+                        sessionStorage.setItem('merchantIdFirst',res.data.value[0].id)
                       })
                     })
                 }else{
-                  this.axios.post('/express/userClient/findExpressMerchantList',{agentId: 3}).then((res)=>{//商家列表
+                  this.axios.post('/express/userClient/findExpressMerchantList',{agentId: 131}).then((res)=>{//商家列表
                     this.courierLists=res.data.value
+                    sessionStorage.setItem('merchantIdFirst',res.data.value[0].id)
                   })
                 }
               },1000)
+            },
+            storageDate(path){  //存储数据
+              sessionStorage.setItem('storageData',JSON.stringify(this.params));
+              sessionStorage.setItem('popParams',JSON.stringify(this.popParams));
+              sessionStorage.setItem('checkbox',JSON.stringify(this.checkbox));
+              //sessionStorage.setItem('dataTimeLength',JSON.stringify(this.dataTimeLength));
+              //sessionStorage.setItem('dataTime',JSON.stringify(this.dataTime));
+              //sessionStorage.setItem('dayTims',JSON.stringify(this.dayTims));
+              this.$router.push(path);
             },
             scanning(){//扫码
                 let _this=this
@@ -269,9 +300,9 @@
                       myGeo.getLocation(new BMap.Point(obj.longitude, obj.latitude), function(result){
                         if (result){
                           if(type == 1){
-                            _this.priceParam.consignerProvinceName = result.addressComponents.city
+                            _this.priceParam.consignerProvinceName = result.addressComponents.province
                           } else if(type == 2){
-                            _this.priceParam.consigneeProvinceName = result.addressComponents.city
+                            _this.priceParam.consigneeProvinceName = result.addressComponents.province
                           }
                         }
                       });
@@ -312,6 +343,7 @@
                 })
             },
             tabState(state){//切换
+                this.clearStorage();
                 /*if(!state){
                     document.title='查快递'
                 } else {
@@ -323,6 +355,7 @@
             },
             postageDel(type){//不再显示
                 type && localStorage.setItem('postage', true)
+                type && sessionStorage.setItem('postage', true)
                 this.postage=true
             },
             goSend(){//寄快递
@@ -363,12 +396,18 @@
                 this.params.consigneeMobile=1
                 this.params.price=1
                 this.params.weight = 1;*/
+
+
+
+                //this.params.pickUpTime=this.params.pickUpDate +'-'+ this.popParams.pickUpTime
+
                 this.params.paymentType = 1;
                 this.params.agentId = sessionStorage.getItem('agentId') || 206;
                 this.axios.post('/express/userClient/createExpressOrder',addToken(this.params)).then((res)=>{//商家列表
                     Indicator.close();
                     //alert(res.data.value.id)
                     this.$router.push(`/orderCompletion/${res.data.value.id}`);
+                    this.clearStorage();
                 }).catch((error) => {
                     Indicator.close();
                     alert(error.response.data.message);
@@ -389,6 +428,7 @@
                 }
             },
             getTime(picker, values) {//选择寄送时间
+              console.log(values)
                 picker.setSlotValues(1, this.dayTims[values[0]]);
                 this.popParams.pickUpTime=values[1]
                 this.popParams.pickUpDate='生成时间'.addDate(new Date(), '转换对应的数字'.filtersDays(values[0]))
@@ -397,24 +437,38 @@
                 let _this = this;
                 window.rightItemClick=function(){
                   _this.openCourier=false;
-                  YLJsBridge.call('showRightItem',{isShow:true,message:'订单'})
+                  try
+                  {
+                    YLJsBridge.call('showRightItem',{isShow:true,message:'订单'})
+                  }
+                  catch(err) { }
                   window.rightItemClick=function(){
                     _this.$router.push('/order');
+                    this.clearStorage();
                   }
                 }
-                YLJsBridge.call('showRightItem',{isShow:true,message:'取消'})
+                try
+                {
+                   YLJsBridge.call('showRightItem',{isShow:true,message:'取消'})
+                }
+                catch(err) { }
                 this.openCourier=true;
                 document.title='快递公司';
             },
             popHides(checked, state){//选中的快递公司
                 this.openCourier=false;
                 this.rightTop();
-                YLJsBridge.call('showRightItem',{isShow:true,message:'订单'})
+                try
+                {
+                    YLJsBridge.call('showRightItem',{isShow:true,message:'订单'})
+                }
+                catch(err) { }
                 document.title='快递';
                 if(state==1){ // 1寄快递 2查快递
-                    this.params.merchantId=checked && checked.id
-                    this.priceParam.merchantId=checked && checked.id
-                    this.params.merchantName=checked && checked.name
+                    this.params.merchantId=checked && checked.id;
+                    this.priceParam.merchantId=checked && checked.id;
+                    this.params.merchantName=checked && checked.name;
+                    sessionStorage.setItem('merchantIdFirst',checked && checked.id);
                     this.getTimes()
                 } else if(state==2){
                     this.searchParams.name=checked.name
@@ -486,9 +540,9 @@
             getPrice(){ //获取价格费用
                 this.price=0
                 this.axios.post('/express/userClient/findExpressPrice',this.priceParam).then((res)=>{
-                    this.params.price=res.data.value.price;
-                    this.params.weight=res.data.value.weight;
-                    this.price=res.data.value.price;
+                    this.params.price=res.data.value.price || 0;
+                    this.params.weight=res.data.value.weight || 0;
+                    this.price=res.data.value.price || 0;
                     //return res.data.value.price
                     //alert(res.data.value)
                 })
@@ -512,6 +566,7 @@
             // 右上角点击方法
             window.rightItemClick=function(){
               _this.$router.push('/order');
+              this.clearStorage();
             }
         },
         beforeDestroy(){

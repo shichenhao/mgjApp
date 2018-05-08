@@ -265,7 +265,7 @@ textarea::-webkit-input-placeholder {
     /* Opera 11.10+ */
     background: -o-linear-gradient(top, #fbed87, #f4b231);
     /* default */
-    background: linear-gradient(top, #fbed87, #f4b231);
+    background: -webkit-gradient(linear, left top, left bottom, from(#fbed87), to(#f4b231));
     background-color: #f4b231;
 
 }

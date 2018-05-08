@@ -18,6 +18,10 @@
                     <td>{{orderInfo.price}}元</td>
                 </tr>
                 <tr>
+                    <th>物品重量</th>
+                    <td>{{orderInfo.weight}}公斤</td>
+                </tr>
+                <tr>
                     <th>取件时间</th>
                     <td>{{orderInfo.pickUpTime}}</td>
                 </tr>
