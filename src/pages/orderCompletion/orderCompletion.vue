@@ -23,7 +23,7 @@
                 </tr>
                 <tr>
                     <th>取件时间</th>
-                    <td>{{orderInfo.pickUpTime}}</td>
+                    <td>{{orderInfo.pickUpDate + ' ' + orderInfo.pickUpTime}}</td>
                 </tr>
                 <tr>
                     <th>备注</th>
