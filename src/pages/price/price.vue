@@ -10,7 +10,7 @@
                 <th>基础重量</th>
                 <th width="29%">超重每公斤加价</th>
             </tr>
-            <tr v-for="(item, index) in list" :class="{colore0e: index%2==1}" v-if="list.length">
+            <tr :class="{colore0e: index%2==1}" v-for="(item, index) in list">
                 <td>
                     {{ item.consignerProvinceName }}
                 </td>
@@ -27,16 +27,13 @@
                     {{ item.addPrice }}元
                 </td>
             </tr>
-            <tr v-if="list.length==0">
-                <td colspan="5">该快递公司暂未提供价格信息</td>
-            </tr>
         </table>
 
     </div>
 </template>
 <script>
-  import { Indicator } from 'mint-ui';
   export default {
+    name: 'price',
     data(){
       return {
         list:[]
@@ -44,12 +41,10 @@
     },
     methods:{
       getPrice(){
-        let merchantId = sessionStorage.getItem('merchantIdFirst')
+        let merchantId = window.merchantIdFirst || sessionStorage.getItem('merchantIdFirst')
         this.axios.post('/express/userClient/findExpressPriceList',addToken({merchantId})).then((res)=>{//商家列表
-          Indicator.close();
           this.list = res.data.value
         }).catch((error) => {
-          Indicator.close();
           alert(error.response.data.message);
         })
       }

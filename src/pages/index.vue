@@ -237,6 +237,7 @@
               sessionStorage.setItem('merchantIdFirst',merchantIdFirst)
             },
             getInit(){
+              Indicator.open('加载中...');
               if(sessionStorage.getItem('storageData')){
                 // 保存下单信息
                 this.params = JSON.parse(sessionStorage.getItem('storageData'));
@@ -257,7 +258,8 @@
                       //alert(a.value)
                       _this.axios.post('/express/userClient/findExpressMerchantList',{agentId: a.value}).then((res)=>{//商家列表
                         _this.courierLists=res.data.value
-                        sessionStorage.setItem('merchantIdFirst',res.data.value[0].id)
+                        //sessionStorage.setItem('merchantIdFirst',res.data.value[0].id)
+                        window.merchantIdFirst = res.data.value[0].id;
                       })
                     })
                 }else{
@@ -266,6 +268,7 @@
                     sessionStorage.setItem('merchantIdFirst',res.data.value[0].id)
                   })
                 }
+                Indicator.close();
               },1000)
             },
             storageDate(path){  //存储数据
@@ -371,10 +374,10 @@
                 } else if (!this.params.pickUpTime){
                     alert('请选配送择时间段！')
                     return false
-                } else if (!this.params.remark) {
+                } /*else if (!this.params.remark) {
                   alert('请给快递员留言！')
                   return false
-                } else if (!this.checkbox){
+                }*/ else if (!this.checkbox){
                     alert('请同意服务协议！')
                     return false
                 } else if (!this.params.price || this.params.price === 0){
@@ -468,6 +471,7 @@
                     this.params.merchantId=checked && checked.id;
                     this.priceParam.merchantId=checked && checked.id;
                     this.params.merchantName=checked && checked.name;
+                    window.merchantIdFirst=checked && checked.id;
                     sessionStorage.setItem('merchantIdFirst',checked && checked.id);
                     this.getTimes()
                 } else if(state==2){
