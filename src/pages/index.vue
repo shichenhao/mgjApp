@@ -268,7 +268,7 @@
                   this.axios.post('/express/userClient/findExpressMerchantList',{agentId: 131}).then((res)=>{//商家列表
                     this.courierLists=res.data.value
                     window.merchantIdFirst = res.data.value[0].id;
-                    alert(window.merchantIdFirst)
+                    //alert(window.merchantIdFirst)
                     sessionStorage.setItem('merchantIdFirst',res.data.value[0].id)
                   })
                 }
