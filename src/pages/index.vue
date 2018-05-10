@@ -259,7 +259,9 @@
                       _this.axios.post('/express/userClient/findExpressMerchantList',{agentId: a.value}).then((res)=>{//商家列表
                         _this.courierLists=res.data.value
                         //sessionStorage.setItem('merchantIdFirst',res.data.value[0].id)
-                        window.merchantIdFirst = res.data.value[0].id;
+                        if(!window.merchantIdFirst){
+                            window.merchantIdFirst = res.data.value[0].id;
+                        }
                       })
                     })
                 }else{
