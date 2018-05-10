@@ -7,8 +7,11 @@
             <div class="order_top clearfix">
                 <a class="order_xq">详情</a>
                 <dl>
-                    <dt><img src="../../assets/images/default.png" width="100%"></dt>
-                    <dd>{{item.expressMerchantName}}<br>订单号：{{item.id}}</dd>
+                    <dt>
+                        <img :src="item.expressMerchant.identityImg" width="100%" v-if="item.expressMerchant.identityImg">
+                        <img src="../../assets/images/default.png" width="100%" v-if="!item.expressMerchant.identityImg || item.expressMerchant.identityImg === 'null'">
+                    </dt>
+                    <dd>{{item.expressMerchant.name}}<br>订单号：{{item.id}}</dd>
                 </dl>
             </div>
             <div class="order_bot">

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="orderInfo">
         <div class="orderCompletion_top" :class="{orderCompletion_top1 : orderInfo.status==4, orderCompletion_top2:orderInfo.status==3}">
             <b>
                 {{
@@ -8,8 +8,11 @@
             </b>
         </div>
         <dl class="orderCompletion_dl clearfix">
-            <dt><img src="../../assets/images/default.png" width="100%"></dt>
-            <dd><b>{{orderInfo.expressMerchantName}}</b><br />订单号：{{orderInfo.id}}<br />下单时间：{{orderInfo.createTime}}</dd>
+            <dt>
+                <img :src="orderInfo.expressMerchant.identityImg" width="100%" v-if="orderInfo.expressMerchant.identityImg">
+                <img src="../../assets/images/default.png" width="100%" v-if="!orderInfo.expressMerchant.identityImg || orderInfo.expressMerchant.identityImg === 'null'">
+            </dt>
+            <dd><b>{{orderInfo.expressMerchant.name}}</b><br />订单号：{{orderInfo.id}}<br />下单时间：{{orderInfo.createTime}}</dd>
         </dl>
         <div class="orderC_list">
             <table border="0" cellspacing="0" cellpadding="0" >
