@@ -12,8 +12,8 @@
                 </dl>
             </div>
             <div class="order_bot">
-                <h4>{{item.consigneeName}} {{item.consigneeMobile}}</h4>
-                {{item.consigneeAddress}}
+                <h4>{{item.consignerName}} {{item.consignerMobile}}</h4>
+                {{item.consignerAddress}}
             </div>
         </div>
         <div class="loadingCenter" v-show="loading">
