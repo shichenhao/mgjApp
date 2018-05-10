@@ -41,7 +41,7 @@
     },
     methods:{
       getPrice(){
-        let merchantId = window.merchantIdFirst || sessionStorage.getItem('merchantIdFirst')
+        let merchantId = window.merchantIdFirst;// || sessionStorage.getItem('merchantIdFirst')
         this.axios.post('/express/userClient/findExpressPriceList',addToken({merchantId})).then((res)=>{//商家列表
           this.list = res.data.value
         }).catch((error) => {
