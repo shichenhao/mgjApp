@@ -205,8 +205,8 @@
                 },
                 priceParam:{//查询价格参数
                     merchantId:null,
-                    consignerProvinceName:null,
-                    consigneeProvinceName:null,
+                    consignerProvinceName:'北京市',
+                    consigneeProvinceName:'北京市',
                 },
                 searchParams:{//查询快递参数
                     number:null
@@ -215,7 +215,7 @@
                     pickUpTime:null,
                     remark:'',
                 },
-                price:0,
+                price:window.price || 0,
             }
         },
         computed: {
@@ -265,6 +265,8 @@
                 }else{
                   this.axios.post('/express/userClient/findExpressMerchantList',{agentId: 131}).then((res)=>{//商家列表
                     this.courierLists=res.data.value
+                    window.merchantIdFirst = res.data.value[0].id;
+                    alert(window.merchantIdFirst)
                     sessionStorage.setItem('merchantIdFirst',res.data.value[0].id)
                   })
                 }
@@ -547,6 +549,7 @@
                     this.params.price=res.data.value.price || 0;
                     this.params.weight=res.data.value.weight || 0;
                     this.price=res.data.value.price || 0;
+                    window.price=res.data.value.price || 0;
                     //return res.data.value.price
                     //alert(res.data.value)
                 })
