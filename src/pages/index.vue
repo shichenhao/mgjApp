@@ -10,7 +10,10 @@
             </li>
         </ul>
         <div class="list_box" style="display:block" v-show="state">
-            <div class="banner"><img src="../assets/images/banner.png" width="100%"></div>
+            <div class="banner" v-if="bannerUrl">
+                <img src="../assets/images/banner.png" width="100%" v-if="false">
+                <a :href="bannerUrl.gotoUrl"><img :src="bannerUrl.imgUrl" /></a>
+            </div>
             <div class="addrH bgfff mb20">
                 <div class="addrH_line"></div>
                 <ul class="addrH_ul">
@@ -102,7 +105,7 @@
                 </p>
                 <p>
                     ● 详细邮费计算规则，请点击底部按钮<br />
-                    <a @click="storageDate('/price')">‘价格计算规则’</a>
+                    <a>‘价格计算规则’</a>
                 </p>
             </div>
             <div class="postage_stn">
@@ -170,6 +173,7 @@
             return {
                 state:JSON.parse(sessionStorage.getItem('state') || true), //true:寄件 , false:查件
                 postage:JSON.parse(localStorage.getItem('postage')) || JSON.parse(sessionStorage.getItem('postage')) || false,//不再提示
+                bannerUrl:{},// 广告图
                 checkbox:true, //同意协议
                 openDate:false,//显示时间弹窗
                 openCourier:false,//显示快递公司弹窗
@@ -257,7 +261,8 @@
                       sessionStorage.setItem("agentId",a.value)
                       //alert(a.value)
                       _this.axios.post('/express/userClient/findExpressMerchantList',{agentId: a.value}).then((res)=>{//商家列表
-                        _this.courierLists=res.data.value
+                        _this.getBanner(a.value);
+                        _this.courierLists=res.data.value;
                         //sessionStorage.setItem('merchantIdFirst',res.data.value[0].id)
                         if(!window.merchantIdFirst){
                             window.merchantIdFirst = res.data.value[0].id;
@@ -266,6 +271,7 @@
                     })
                 }else{
                   this.axios.post('/express/userClient/findExpressMerchantList',{agentId: 131}).then((res)=>{//商家列表
+                    this.getBanner(131);
                     this.courierLists=res.data.value
                     window.merchantIdFirst = res.data.value[0].id;
                     //alert(window.merchantIdFirst)
@@ -349,6 +355,11 @@
                     }
                 })
             },
+            getBanner(agentId){
+                this.axios.post('/express/userClient/findExpressBannerList',addToken({agentId})).then((res)=>{//寄送时间
+                    this.bannerUrl = res.data.value[0];
+                })
+            },
             tabState(state){//切换
                 this.clearStorage();
                 /*if(!state){
@@ -376,7 +387,7 @@
                     alert('请选择快递公司！')
                     return false
                 } else if (!this.params.pickUpTime){
-                    alert('请选配送择时间段！')
+                    alert('请选择取件时间段！')
                     return false
                 } /*else if (!this.params.remark) {
                   alert('请给快递员留言！')

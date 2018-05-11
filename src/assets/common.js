@@ -36,17 +36,15 @@ window.alertApp = function(msg){
 window.addToken=function(obj){
   let token = sessionStorage.getItem("token");
   if(!token){
-    setTimeout(()=>{
-      YLJsBridge.call('getToken', '', function (a) {
-        sessionStorage.setItem("token", a.value)
-        token = a.value
-      })
-    },500)
+    YLJsBridge.call('getToken', '', function (a) {
+      sessionStorage.setItem("token", a.value)
+      token = a.value
+    })
   }
-
   let newObj=obj || {}
   newObj.token = token;
   return newObj
+
 }
 
 String.prototype.filtersDay=function(state){
