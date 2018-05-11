@@ -342,5 +342,13 @@ textarea::-webkit-input-placeholder {
 }
 
 
+.banner{
+    text-align: center;
+    height: 2.42rem;
+    overflow: hidden;
+}
 
-
+.banner img{
+    width: 7.5rem;
+    height: 2.42rem;
+}
