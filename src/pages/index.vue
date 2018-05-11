@@ -366,7 +366,7 @@
                 this.postage=true
             },
             goSend(){//寄快递
-                /*if(!this.params.consignerAddressId){
+                if(!this.params.consignerAddressId){
                     alert('选择发货地址！')
                     return false
                 } else if (!this.params.consigneeAddressId){
@@ -378,20 +378,20 @@
                 } else if (!this.params.pickUpTime){
                     alert('请选配送择时间段！')
                     return false
-                } /!*else if (!this.params.remark) {
+                } /*else if (!this.params.remark) {
                   alert('请给快递员留言！')
                   return false
-                }*!/ else if (!this.checkbox){
+                }*/ else if (!this.checkbox){
                     alert('请同意服务协议！')
                     return false
                 } else if (!this.params.price || this.params.price === 0){
                     alert('快递价格不能为0，请重新选择快递公司')
                     return false
-                }*/
+                }
 
                 Indicator.open('下单中...');
 
-                this.params.consignerAddressId=1
+                /*this.params.consignerAddressId=1
                 this.params.consignerAddress=1
                 this.params.consignerHouseNumber=1
                 this.params.consignerName=1
@@ -402,7 +402,7 @@
                 this.params.consigneeName=1
                 this.params.consigneeMobile=1
                 this.params.price=1
-                this.params.weight = 1;
+                this.params.weight = 1;*/
 
 
 
