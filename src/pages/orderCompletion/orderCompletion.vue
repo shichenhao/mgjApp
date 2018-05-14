@@ -66,7 +66,6 @@
     },
     methods:{
       getInit(){//查询订单
-        Indicator.open('查询中...');
         this.axios.post('/express/userClient/findExpressOrderById',addToken({id:this.$router.history.current.params.id})).then((res)=>{//商家列表
           Indicator.close();
           this.orderInfo=res.data.value
@@ -84,10 +83,20 @@
         YLJsBridge.call('pay',{orderId:_this.orderInfo.id},function(a){
           _this.getInit()
         })
+      },
+      getToken(){
+        setTimeout(()=>{
+          if(!sessionStorage.getItem('token')){
+            Indicator.open('查询中...');
+            this.getToken()
+          } else {
+            this.getInit()
+          }
+        },20)
       }
     },
     created(){
-      this.getInit()
+      this.getToken()
     }
   }
 </script>

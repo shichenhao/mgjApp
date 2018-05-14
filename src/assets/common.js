@@ -35,12 +35,6 @@ window.alertApp = function(msg){
 
 window.addToken=function(obj){
   let token = sessionStorage.getItem("token");
-  if(!token){
-    YLJsBridge.call('getToken', '', function (a) {
-      sessionStorage.setItem("token", a.value)
-      token = a.value
-    })
-  }
   let newObj=obj || {}
   newObj.token = token;
   return newObj

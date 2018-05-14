@@ -396,7 +396,7 @@
                     alert('请同意服务协议！')
                     return false
                 } else if (!this.params.price || this.params.price === 0){
-                    alert('快递价格不能为0，请重新选择快递公司')
+                    alert('抱歉，当前寄送地址暂未开通！')
                     return false
                 }
 
