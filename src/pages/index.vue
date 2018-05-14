@@ -10,9 +10,12 @@
             </li>
         </ul>
         <div class="list_box" style="display:block" v-show="state">
-            <div class="banner" v-if="bannerUrl">
-                <img src="../assets/images/banner.png" width="100%" v-if="false">
-                <a :href="bannerUrl.gotoUrl"><img :src="bannerUrl.imgUrl" /></a>
+            <div class="banner" v-if="bannerUrl.length">
+                <mt-swipe :auto="3000" :show-indicators="false">
+                    <mt-swipe-item v-for="(item,index) in bannerUrl" :key="index">
+                        <a :href="item.gotoUrl"><img :src="item.imgUrl" /></a>
+                    </mt-swipe-item>
+                </mt-swipe>
             </div>
             <div class="addrH bgfff mb20">
                 <div class="addrH_line"></div>
@@ -173,7 +176,7 @@
             return {
                 state:JSON.parse(sessionStorage.getItem('state') || true), //true:寄件 , false:查件
                 postage:JSON.parse(localStorage.getItem('postage')) || JSON.parse(sessionStorage.getItem('postage')) || false,//不再提示
-                bannerUrl:{},// 广告图
+                bannerUrl:[],// 广告图
                 checkbox:true, //同意协议
                 openDate:false,//显示时间弹窗
                 openCourier:false,//显示快递公司弹窗
@@ -357,7 +360,7 @@
             },
             getBanner(agentId){
                 this.axios.post('/express/userClient/findExpressBannerList',addToken({agentId})).then((res)=>{//寄送时间
-                    this.bannerUrl = res.data.value[0];
+                    this.bannerUrl = res.data.value.slice(0,6);
                 })
             },
             tabState(state){//切换

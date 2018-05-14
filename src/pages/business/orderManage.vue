@@ -40,8 +40,11 @@
                     <div class="right message"><span class="date">{{ item.pickUpTime}}</span></div>
                 </div>
             </div>
-            <div class="btns" v-if="item.status==2">
+            <div class="btns" v-if="item.status==3">
                 <div @click="take(item.id)" class="takeBtn">取件</div>
+            </div>
+            <div class="btns" v-if="item.status==2">
+                <div @click="takeOk(item.id)" class="takeBtn">确认订单</div>
             </div>
         </div>
     </div>
@@ -77,6 +80,12 @@
         this.axios.post('/express/merchantClient/batchDoneExpressOrder',addToken({ids:id})).then((res)=>{//查询数据
           Indicator.close()
           MessageBox('提示', '取件成功！');
+        })
+      },
+      takeOk(id){    //确认
+        this.axios.post('/express/merchantClient/confirmExpressOrder',addToken({id})).then((res)=>{//查询数据
+          Indicator.close()
+          MessageBox('提示', '操作成功！');
         })
       },
       loadMore() { //下拉加载数据

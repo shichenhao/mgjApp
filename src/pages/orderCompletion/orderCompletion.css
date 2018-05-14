@@ -24,25 +24,24 @@
 .orderCompletion_dl{
     background:#fff;
     padding:0.3rem;
-    margin-top:0.03rem
+    display: flex;
 }
 .orderCompletion_dl dt{
-    width:0.8rem;
-    height:0.8rem;
-    float:left;
-    padding-top:3%;
+    width:1.2rem;
+    height: .8rem;
+    display: flex;
+    align-items: center;
 }
 .orderCompletion_dl dt img{
     display:block;
-    border-radius:100%;
-    width:100%;
+    border-radius:.8rem;
+    width: .8rem;
+    height: .8rem;
 }
 .orderCompletion_dl dd{
     color:#999;
-    width:5.25rem;
     line-height:0.38rem;
-    padding-left:0.8rem;
-    float:left;
+    flex: 1;
     font-size:0.22rem;
 }
 .orderCompletion_dl dd b{
@@ -96,12 +95,14 @@
     background:#fff;
     max-width:750px;
     height:1.1rem;
-    line-height:1.1rem;
+    display: flex;
+    align-items: center;
     font-size:0.26rem;
-    text-align:right;
+    justify-content: space-around;
     padding:0 0.24rem;
     box-sizing:border-box;
     color:#999;
+    position: relative;
 }
 .order_costC a{
     font-size:0.26rem;

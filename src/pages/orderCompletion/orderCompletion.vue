@@ -1,6 +1,6 @@
 <template>
     <div v-if="orderInfo">
-        <div class="orderCompletion_top" :class="{orderCompletion_top1 : orderInfo.status==4, orderCompletion_top2:orderInfo.status==3}">
+        <div class="orderCompletion_top" :class="{orderCompletion_top1 : orderInfo.status == 4, orderCompletion_top2:orderInfo.status == 3}">
             <b>
                 {{
                     '订单状态'.statusFilter(orderInfo.status)
@@ -12,7 +12,7 @@
                 <img :src="orderInfo.expressMerchant.identityImg" width="100%" v-if="orderInfo.expressMerchant.identityImg">
                 <img src="../../assets/images/default.png" width="100%" v-if="!orderInfo.expressMerchant.identityImg || orderInfo.expressMerchant.identityImg === 'null'">
             </dt>
-            <dd><b>{{orderInfo.expressMerchant.name}}</b><br />订单号：{{orderInfo.id}}<br />下单时间：{{orderInfo.createTime}}</dd>
+            <dd><b>{{orderInfo.expressMerchant.name}}</b><br />订单号：{{orderInfo.id}}<br />下单时间：{{orderInfo.modifyTime}}</dd>
         </dl>
         <div class="orderC_list">
             <table border="0" cellspacing="0" cellpadding="0" >
@@ -50,7 +50,10 @@
         </div>
         <div class="order_cost" v-if="orderInfo.status==1">
             <div class="order_costC">
-                费用预估<b>{{orderInfo.price}}元</b><a @click="payment">付款</a>
+                <span>请在{{minute}}分:{{second}}秒内付款</span>
+                <span>
+                    费用预估<b>{{orderInfo.price}}元</b><a @click="payment">付款</a>
+                </span>
             </div>
         </div>
     </div>
@@ -61,18 +64,67 @@
     name: 'orderOver',
     data () {
       return {
-        orderInfo:null
+        orderInfo:null,
+        minutes: 14,
+        seconds: 60
+      }
+    },
+    watch: {
+      second: {
+        handler (newVal) {
+          this.num(newVal)
+        }
+      },
+      minute: {
+        handler (newVal) {
+          this.num(newVal)
+        }
+      }
+    },
+    computed: {
+      second: function () {
+        return this.num(this.seconds)
+      },
+      minute: function () {
+        return this.num(this.minutes)
       }
     },
     methods:{
+      num: function (n) {
+        return n < 10 ? '0' + n : '' + n
+      },
+      add: function () {
+        let _this = this
+        let time = window.setInterval(function () {
+          if (_this.seconds === 0 && _this.minutes !== 0) {
+            _this.seconds = 59
+            _this.minutes -= 1
+          } else if (_this.minutes === 0 && _this.seconds === 0) {
+            _this.seconds = 0
+            window.clearInterval(time)
+          } else {
+            _this.seconds -= 1
+          }
+        }, 1000)
+      },
       getInit(){//查询订单
         Indicator.open('查询中...');
         this.axios.post('/express/userClient/findExpressOrderById',addToken({id:this.$router.history.current.params.id})).then((res)=>{//商家列表
           Indicator.close();
-          this.orderInfo=res.data.value
-          if(new Date().getTime() > new Date(res.data.value.paymentExpireTime).getTime()){
-            this.orderInfo.status = -1
+          let Time = new Date(res.data.value.paymentExpireTime).getTime() - new Date().getTime();
+
+          if(Time < 0){
+              let minutes = parseInt((Time % (1000 * 60 * 60)) / (1000 * 60));
+              let seconds = parseInt((Time % (1000 * 60)) / 1000);
+              this.minutes = minutes;
+              this.seconds = seconds;
+              this.add();
           }
+
+          this.orderInfo=res.data.value
+          /*if(new Date().getTime() > new Date(res.data.value.paymentExpireTime).getTime()){
+            this.orderInfo.status = -1
+          }*/
         })
       },
       goDetail(id){
@@ -87,7 +139,7 @@
       }
     },
     created(){
-      this.getInit()
+      this.getInit();
     }
   }
 </script>
