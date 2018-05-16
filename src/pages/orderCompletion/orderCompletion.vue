@@ -12,7 +12,7 @@
                 <img :src="orderInfo.expressMerchant.identityImg" width="100%" v-if="orderInfo.expressMerchant.identityImg">
                 <img src="../../assets/images/default.png" width="100%" v-if="!orderInfo.expressMerchant.identityImg || orderInfo.expressMerchant.identityImg === 'null'">
             </dt>
-            <dd><b>{{orderInfo.expressMerchant.name}}</b><br />订单号：{{orderInfo.id}}<br />下单时间：{{orderInfo.modifyTime}}</dd>
+            <dd><b>{{orderInfo.expressMerchant.name}}</b><br />订单号：{{orderInfo.id}}<br />下单时间：{{orderInfo.createTime}}</dd>
         </dl>
         <div class="orderC_list">
             <table border="0" cellspacing="0" cellpadding="0" >
@@ -50,10 +50,10 @@
         </div>
         <div class="order_cost" v-if="orderInfo.status==1">
             <div class="order_costC">
-                <span>请在{{minute}}分:{{second}}秒内付款</span>
                 <span>
-                    费用预估<b>{{orderInfo.price}}元</b><a @click="payment">付款</a>
+                    费用预估<b>{{orderInfo.price}}元</b>
                 </span>
+                <a class="order_djs" @click="payment">去支付还剩{{minute}}分{{second}}秒</a>
             </div>
         </div>
     </div>
@@ -65,8 +65,8 @@
     data () {
       return {
         orderInfo:null,
-        minutes: 14,
-        seconds: 60
+        minutes: 15,
+        seconds: 0
       }
     },
     watch: {
@@ -101,19 +101,27 @@
             _this.minutes -= 1
           } else if (_this.minutes === 0 && _this.seconds === 0) {
             _this.seconds = 0
-            window.clearInterval(time)
+            window.clearInterval(time);
+            Indicator.open('订单取消中...');
+            setTimeout(()=>{
+              window.location.reload();
+            },3000)
           } else {
             _this.seconds -= 1
           }
         }, 1000)
       },
       getInit(){//查询订单
-        Indicator.open('查询中...');
         this.axios.post('/express/userClient/findExpressOrderById',addToken({id:this.$router.history.current.params.id})).then((res)=>{//商家列表
           Indicator.close();
-          let Time = new Date(res.data.value.paymentExpireTime).getTime() - new Date().getTime();
 
-          if(Time < 0){
+          let times = res.data.value.paymentExpireTime
+
+          times = times.replace(/-/g,':').replace(' ',':');
+          times = times.split(':');
+
+          let Time = new Date(times[0],(times[1]-1),times[2],times[3],times[4],times[5]).getTime() - new Date().getTime();
+          if(Time > 0){
               let minutes = parseInt((Time % (1000 * 60 * 60)) / (1000 * 60));
               let seconds = parseInt((Time % (1000 * 60)) / 1000);
               this.minutes = minutes;
@@ -136,10 +144,20 @@
         YLJsBridge.call('pay',{orderId:_this.orderInfo.id},function(a){
           _this.getInit()
         })
+      },
+      getToken(){
+        setTimeout(()=>{
+          if(!sessionStorage.getItem('token')){
+            Indicator.open('查询中...');
+            this.getToken()
+          } else {
+            this.getInit()
+          }
+        },20)
       }
     },
     created(){
-      this.getInit();
+      this.getToken()
     }
   }
 </script>

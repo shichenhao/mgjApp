@@ -1,7 +1,7 @@
 .courierList{height:100vh;background:#fff;padding:0 0.32rem;overflow-y:auto}
 .courierList dl{padding:0.4rem 0;border-bottom:1px solid #f5f5f5}
 .courierList dl dt{width:0.8rem;height:0.8rem;float:left;}
-.courierList dl dt img{display:block;border-radius:100%;width:100%;}
+.courierList dl dt img{display:block;border-radius:.8rem;width:0.8rem;height:0.8rem;}
 .courierList dl dd{color:#333;line-height:0.42rem;padding-left:0.3rem;float:left;font-size:0.26rem;line-height:0.8rem;}
 
 

@@ -212,8 +212,8 @@
                 },
                 priceParam:{//查询价格参数
                     merchantId:null,
-                    consignerProvinceName:null,
-                    consigneeProvinceName:null,
+                    consignerProvinceName:window.consignerProvinceName || null,
+                    consigneeProvinceName:window.consigneeProvinceName || null,
                 },
                 searchParams:{//查询快递参数
                     number:null
@@ -235,6 +235,11 @@
             }
         },
         methods:{
+            isLogin(){
+              if(!sessionStorage.getItem('token')){
+                window.login()
+              }
+            },
             clearStorage(){
               //清除存储数据，保留token
               let token = sessionStorage.getItem('token');
@@ -261,9 +266,15 @@
               setTimeout(()=>{
                 if(window.YLJsBridge){
                     YLJsBridge.call('getAgentId','',function(a){
-                      sessionStorage.setItem("agentId",a.value)
                       //alert(a.value)
-                      _this.axios.post('/express/userClient/findExpressMerchantList',{agentId: a.value}).then((res)=>{//商家列表
+                      sessionStorage.setItem("agentId",a.value);
+                      //alert(a.value)
+                      _this.axios.post('/express/userClient/findExpressMerchantListByAddress',
+                        {
+                          agentId: a.value,
+                          consignerProvinceName: _this.priceParam.consignerProvinceName,
+                          consigneeProvinceName: _this.priceParam.consigneeProvinceName,
+                        }).then((res)=>{//商家列表
                         _this.getBanner(a.value);
                         _this.courierLists=res.data.value;
                         //sessionStorage.setItem('merchantIdFirst',res.data.value[0].id)
@@ -273,7 +284,11 @@
                       })
                     })
                 }else{
-                  this.axios.post('/express/userClient/findExpressMerchantList',{agentId: 131}).then((res)=>{//商家列表
+                  this.axios.post('/express/userClient/findExpressMerchantListByAddress',{
+                    agentId: 131,
+                    consignerProvinceName: '北京市',
+                    consigneeProvinceName: '北京市',
+                  }).then((res)=>{//商家列表
                     this.getBanner(131);
                     this.courierLists=res.data.value
                     window.merchantIdFirst = res.data.value[0].id;
@@ -285,6 +300,10 @@
               },1000)
             },
             storageDate(path){  //存储数据
+              if(!this.params.merchantName){
+                alert("请选择快递公司");
+                return false;
+              }
               sessionStorage.setItem('storageData',JSON.stringify(this.params));
               sessionStorage.setItem('popParams',JSON.stringify(this.popParams));
               sessionStorage.setItem('checkbox',JSON.stringify(this.checkbox));
@@ -309,16 +328,26 @@
             selectAddress(type){//选择地址
                 let myGeo = new BMap.Geocoder();
 
+              if(!sessionStorage.getItem('token')) {
+                this.isLogin()
+                return false;
+              }
                 let _this=this
-                YLJsBridge.call('selectAddress',{codeType:2},function(string){
+                YLJsBridge.call('selectAddress',{codeType:2,title:type === 1 ? '寄件人地址薄' : '收件人地址薄'},function(string){
                       // 根据坐标得到地址描述
                      let obj = JSON.parse(string.value)
                       myGeo.getLocation(new BMap.Point(obj.longitude, obj.latitude), function(result){
                         if (result){
                           if(type == 1){
-                            _this.priceParam.consignerProvinceName = result.addressComponents.province
+                            _this.priceParam.consignerProvinceName = result.addressComponents.province;
+                            window.consignerProvinceName = result.addressComponents.province;
                           } else if(type == 2){
-                            _this.priceParam.consigneeProvinceName = result.addressComponents.province
+                            _this.priceParam.consigneeProvinceName = result.addressComponents.province;
+                            window.consigneeProvinceName = result.addressComponents.province;
+                          }
+
+                          if(_this.priceParam.consignerProvinceName && _this.priceParam.consigneeProvinceName) {
+                            _this.getInit();
                           }
                         }
                       });
@@ -361,6 +390,8 @@
             getBanner(agentId){
                 this.axios.post('/express/userClient/findExpressBannerList',addToken({agentId})).then((res)=>{//寄送时间
                     this.bannerUrl = res.data.value.slice(0,6);
+                }).catch((error) => {
+                  //window.login()
                 })
             },
             tabState(state){//切换
@@ -399,7 +430,7 @@
                     alert('请同意服务协议！')
                     return false
                 } else if (!this.params.price || this.params.price === 0){
-                    alert('快递价格不能为0，请重新选择快递公司')
+                    alert('抱歉，当前寄送地址暂未开通！')
                     return false
                 }
 
@@ -424,15 +455,17 @@
 
                 this.params.paymentType = 1;
                 this.params.agentId = sessionStorage.getItem('agentId') || 206;
-                this.axios.post('/express/userClient/createExpressOrder',addToken(this.params)).then((res)=>{//商家列表
-                    Indicator.close();
-                    //alert(res.data.value.id)
-                    this.$router.push(`/orderCompletion/${res.data.value.id}`);
-                    this.clearStorage();
-                }).catch((error) => {
-                    Indicator.close();
-                    alert(error.response.data.message);
-                })
+                if(window.getToken()){
+                    this.axios.post('/express/userClient/createExpressOrder',addToken(this.params)).then((res)=>{//商家列表
+                        Indicator.close();
+                        //alert(res.data.value.id)
+                        this.$router.push(`/orderCompletion/${res.data.value.id}`);
+                        this.clearStorage();
+                    }).catch((error) => {
+                        Indicator.close();
+                        alert(error.response.data.message);
+                    })
+                }
             },
             openDatePop(state) {//寄送时间确认
                 if(!this.params.merchantId){
@@ -455,6 +488,12 @@
                 this.popParams.pickUpDate='生成时间'.addDate(new Date(), '转换对应的数字'.filtersDays(values[0]))
             },
             openopenCourierPop() {//选择快递公司
+                if(!this.priceParam.consignerProvinceName || !this.priceParam.consigneeProvinceName){
+                  alert('请选择寄件地址和收件地址！');
+                  return false;
+                }
+
+
                 let _this = this;
                 window.rightItemClick=function(){
                   _this.openCourier=false;

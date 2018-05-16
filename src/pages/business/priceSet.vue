@@ -68,7 +68,7 @@
       }
     },
     methods: {
-      getInit(){
+      getInit(type){
         let _this = this;
         // 右上角点击方法
         window.rightItemClick=function(){
@@ -76,12 +76,14 @@
           _this.rightTop();
         }
         this.selectAll = [];
-        /*
-        Indicator.open('加载中...');
-        this.axios.post('/express/merchantClient/findExpressPriceList', addToken()).then((res) => {//查询数据
-          this.list = res.data.value
-          Indicator.close()
-        })*/
+        if(type){
+            Indicator.open('加载中...');
+            this.axios.post('/express/merchantClient/findExpressPriceList', addToken()).then((res) => {//查询数据
+              this.list = res.data.value.list
+              Indicator.close()
+              this.editState(!this.edit)
+            })
+        }
       },
       goItem(id){ //跳转到详情
         if(!this.edit){
@@ -92,7 +94,7 @@
         this.edit = type || false
       },
       itemSelect(id, type){ //选中的数据
-        let newVal = this.list.list[id]
+        let newVal = this.list[id]
         if (type) {
           newVal.select = this.selectAlll
           if (this.selectAlll) {
@@ -101,17 +103,17 @@
             this.selectAll = []
           }
         } else {
-          newVal.select = !this.list.list[id].select
+          newVal.select = !this.list[id].select
           // 选择添加到选中的列表中 否则从列表中删除
-          if (this.list.list[id].select) {
-            this.selectAll.push(this.list.list[id])
+          if (this.list[id].select) {
+            this.selectAll.push(this.list[id])
           } else {
             this.selectAll = this.selectAll.filter((item) => {
               return item.select
             })
           }
           // 如果都选择则全选按钮选中
-          if (this.list.list.every((item) => {
+          if (this.list.every((item) => {
               return item.select == true
             })) {
             this.selectAlll = true
@@ -120,13 +122,13 @@
           }
 
         }
-        this.$set(this.list.list, id, newVal)
+        this.$set(this.list, id, newVal)
 
       },
       handleSelectAll(){ //全选
         this.selectAll = []
         this.selectAlll = !this.selectAlll
-        this.list.list.map((item, index) => {
+        this.list.map((item, index) => {
           this.itemSelect(index, true)
         })
       },
@@ -141,7 +143,7 @@
             if (res.data.success) {
               Indicator.close();
               alert('删除成功!');
-              this.getInit();
+              this.getInit(true);
             }
           })
         }
@@ -156,7 +158,7 @@
           //setTimeout(() => {
             this.axios.post('/express/merchantClient/findExpressPriceList', addToken({start})).then((res) => {//寄送时间
               this.list = [...this.list, ...res.data.value.list];
-              this.total=res.data.value.total
+              this.total=res.data.value.list.length
             })
             this.loading = false;
           //}, 500);

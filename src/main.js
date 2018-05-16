@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import MintUI from 'mint-ui'
+import MuseUI from 'muse-ui'
 import router from './router';
+import 'muse-ui/dist/muse-ui.css'
 import 'mint-ui/lib/style.css'
 import App from './App.vue'
 import axios from 'axios';
@@ -21,6 +23,7 @@ axios.interceptors.request.use(function (config) {
 })
 
 Vue.use(MintUI)
+Vue.use(MuseUI)
 Vue.prototype.axios=axios;
 
 router.beforeEach((to, from, next) => {

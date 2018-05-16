@@ -180,6 +180,8 @@
 }
 .orderManage .btns{
     height:0.95rem;
+    display: flex;
+    justify-content: space-between;
 }
 .orderManage .takeBtn{
     width:1.4rem;
@@ -190,8 +192,7 @@
     text-align:center;
     color:#2290ea;
     border-radius:5px;
-    float:right;
-    margin:0.18rem 0.3rem 0 0;
+    margin:0.18rem 0.3rem;
 }
 
 .priceSet{
@@ -629,4 +630,9 @@
     align-items: center;
     color: #26a2ff;
     font-size: .24rem;
+}
+
+.noneExpress{
+    text-align: center;
+    padding: 3rem 0;
 }

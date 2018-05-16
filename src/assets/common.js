@@ -6,6 +6,7 @@
       YLJsBridge.call('getToken', '', function (a) {
         //alert(a.value)
         sessionStorage.setItem("token", a.value)
+        //sessionStorage.setItem("token",'85937ecbd73940f6bf13f4bd9749df00')
         //sessionStorage.setItem("token",'78c8001ccbdc40fb9370b66a35304b9e')
         YLJsBridge.call('getAgentId', '', function (b) {
           //alert(b.value)
@@ -35,12 +36,6 @@ window.alertApp = function(msg){
 
 window.addToken=function(obj){
   let token = sessionStorage.getItem("token");
-  if(!token){
-    YLJsBridge.call('getToken', '', function (a) {
-      sessionStorage.setItem("token", a.value)
-      token = a.value
-    })
-  }
   let newObj=obj || {}
   newObj.token = token;
   return newObj
@@ -194,3 +189,31 @@ String.prototype.expressName = function (cody) {
 }
 
 window.expressName = JSON.parse(localStorage.getItem("express")) || {};
+
+
+String.prototype.timestampToTime = function (timestamp) {
+  let date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+  Y = date.getFullYear() + '-';
+  M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+  D = date.getDate();
+  h = date.getHours() + ':';
+  m = date.getMinutes() + ':';
+  s = date.getSeconds();
+  return Y+M+D;
+}
+
+window.getToken =function (){
+    if(!sessionStorage.getItem('token')){
+      YLJsBridge.call('getToken', '', function (a) {
+        sessionStorage.setItem("token", a.value)
+      })
+      window.getToken();
+    } else {
+      return true
+    }
+}
+window.login = function(){
+  YLJsBridge.call('login','',function(a){
+    sessionStorage.setItem("token", a.value);
+  })
+}

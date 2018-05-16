@@ -82,3 +82,28 @@ table {
 .picker-item{
     color: #999;
 }
+
+.mu-date-picker{
+    display: none;
+}
+
+.mu-date-display,.mu-day-button-bg,.mu-appbar,.mu-raised-button-primary{
+    background-color: #3696d3;
+}
+.mu-flat-button-primary{
+    color: #3696d3;
+}
+
+.mu-popup-bottom{
+    width: 100%;
+    padding-bottom: .3rem;
+}
+.mu-content-block{
+    padding: .3rem 0 0;
+    text-align: center;
+}
+.mu-content-block textarea{
+    width: 95%;
+    border:1px solid #dcdcdc;
+    padding: 5px;
+}

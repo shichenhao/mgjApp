@@ -146,10 +146,14 @@
         this.timeList.splice(index,1);
       },
       timeBoxAdd(){ //新增时间参数
-        this.timeList.push({
-          first:null,
-          last:null
-        })
+        if(this.timeList.length >= 8){
+          alert('最多可配置8个时间段')
+        }else{
+            this.timeList.push({
+              first:null,
+              last:null
+            })
+        }
       },
       getTimes(values) {//选择服务时间
         this.addParams.serviceTimes=values
