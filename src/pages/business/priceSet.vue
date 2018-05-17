@@ -77,6 +77,7 @@
         }
         this.selectAll = [];
         if(type){
+            YLJsBridge.call('showRightItem',{isShow:true,message:'编辑'})
             Indicator.open('加载中...');
             this.axios.post('/express/merchantClient/findExpressPriceList', addToken()).then((res) => {//查询数据
               this.list = res.data.value.list

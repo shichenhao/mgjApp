@@ -182,7 +182,20 @@
     height:0.95rem;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
+.orderManage .btns span{
+    padding:0 .3rem;
+    font-size: .3rem;
+    color: #999;
+}
+
+.orderManage .btns span i{
+    font-size: .24rem;
+    color: #666;
+    padding-left: .24rem;
+}
+
 .orderManage .takeBtn{
     width:1.4rem;
     height:0.5rem;

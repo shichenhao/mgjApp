@@ -1,5 +1,5 @@
 <template>
-    <div
+    <div class="heightOver"
         v-infinite-scroll="loadMore"
         infinite-scroll-disabled="loading"
         infinite-scroll-distance="20">
@@ -43,6 +43,9 @@
                     <div class="left takeTimeL">取件时间：</div>
                     <div class="right message"><span class="date">{{ item.pickUpDate + ' ' + item.pickUpTime}}</span></div>
                 </div>
+            </div>
+            <div class="btns" v-if="item.status==-1">
+                <span> 取消原因：<i>{{item.cancelReason}} </i></span>
             </div>
             <div class="btns" v-if="item.status==3">
                 <div @click="open('bottom',item.id)" class="takeBtn">取消订单</div>

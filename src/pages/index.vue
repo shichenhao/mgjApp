@@ -300,6 +300,10 @@
               },1000)
             },
             storageDate(path, type){  //存储数据
+              if(!sessionStorage.getItem('token')) {
+                this.isLogin()
+                return false;
+              }
               if(type){
                   if(!this.params.merchantName){
                     alert("请选择快递公司");
@@ -474,6 +478,10 @@
                 }
             },
             openDatePop(state) {//寄送时间确认
+              if(!sessionStorage.getItem('token')) {
+                this.isLogin()
+                return false;
+              }
                 if(!this.params.merchantId){
                     alert('请先选择快递公司！');
                     return false
@@ -494,6 +502,10 @@
                 this.popParams.pickUpDate='生成时间'.addDate(new Date(), '转换对应的数字'.filtersDays(values[0]))
             },
             openopenCourierPop() {//选择快递公司
+                  if(!sessionStorage.getItem('token')) {
+                    this.isLogin()
+                    return false;
+                  }
                 if(!this.priceParam.consignerProvinceName || !this.priceParam.consigneeProvinceName){
                   alert('请选择寄件地址和收件地址！');
                   return false;
@@ -543,6 +555,10 @@
                 }
             },
             openMessagePop(state) {//显示留言
+              if(!sessionStorage.getItem('token')) {
+                this.isLogin()
+                return false;
+              }
                 this.openMessage=!this.openMessage
                 if(state && state==1){
                     if(this.popParams.remark.length > 20){
