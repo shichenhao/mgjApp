@@ -59,7 +59,7 @@
         </div>
 
         <mu-popup position="bottom" popupClass="demo-popup-bottom" :open="bottomPopup" @close="close('bottom')">
-            <mu-appbar title="弹出">
+            <mu-appbar title="取消订单">
                 <mu-flat-button slot="right" label="关闭" color="white" @click="close('bottom')"/>
             </mu-appbar>
             <mu-content-block>
@@ -138,7 +138,6 @@
         this.axios.post('/express/merchantClient/batchDoneExpressOrder',addToken({ids:id})).then((res)=>{//查询数据
           Indicator.close()
           MessageBox('提示', '取件成功！');
-          this.list=[]
           this.search();
         }).catch((error) => {
           Indicator.close();
@@ -146,9 +145,17 @@
         })
       },
       clearOk(){    //取消订单
+        if(!this.popParams.cancelReason){
+          alert('请填写取消原因！');
+          return false;
+        }
+
+
         Indicator.open('操作中...');
         this.axios.post('/express/merchantClient/cancelExpressOrder',addToken(this.popParams)).then((res)=>{//查询数据
           Indicator.close()
+          this.bottomPopup=false;
+          this.popParams.cancelReason=null;
           MessageBox('提示', '取消成功！');
           this.search();
         }).catch((error) => {
@@ -161,24 +168,16 @@
         this.axios.post('/express/merchantClient/confirmExpressOrder',addToken({id})).then((res)=>{//查询数据
           Indicator.close()
           MessageBox('提示', '操作成功！');
-          this.list=[]
           this.search();
         }).catch((error) => {
           Indicator.close();
           alert(error.response.data.message);
         })
       },
-      clear(obj){    //取消订单
-
-      },
-      call(phone){
-        YLJsBridge.call('callTel',{phoneNum:phone})
-      },
       search(){
-        //alert(1)
         YLJsBridge.call('showRightItem',{isShow:true,message:this.dateDay.substr(5,12)})
         Indicator.open('加载中...');
-        this.list=[];
+        //this.list=[];
         this.total = 20
         let startTime = this.dateDay;
         let endTime = this.dateDay;
@@ -189,6 +188,7 @@
           endTime
         }
         this.axios.post('/express/merchantClient/findExpressOrderList',addToken(param)).then((res)=>{//寄送时间
+          //alert(1)
           Indicator.close()
           this.list = res.data.value.list;
           this.total = res.data.value.total

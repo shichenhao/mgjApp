@@ -166,7 +166,7 @@ textarea {-webkit-appearance: none;}
 .submit_r{float:right;width:2rem;height:1.4rem;line-height:1.4rem;font-size:0.3rem;color:#fff;background:#00a2d3;text-align:center;}
 .search_box{width:6.9rem;margin:0 auto;position:relative;top:-0.62rem}
 .search_box ul{background:#fff;padding:0 0.32rem;font-size:0}
-.search_box ul li{padding:0.31rem 0;height:0.5rem;}
+.search_box ul li{padding:0.31rem 0;height:1.12rem;}
 .search_box ul li:first-child{border-bottom:1px solid #f1f1f1; }
 .search_sm{float:right;width:0.33rem;height:0.33rem;margin-top: 0.09rem;}
 .search_sm img{display:block;}
@@ -242,8 +242,10 @@ textarea::-webkit-input-placeholder {
     color:#fce46a;
     font-weight:normal;
 }
-.postage_stn{text-align:center;
-padding: .3rem 0 0}
+.postage_stn{
+    text-align:center;
+    padding: .3rem 0 0
+}
 .postage_stn a{
     display:inline-block;
     width:2.3rem;

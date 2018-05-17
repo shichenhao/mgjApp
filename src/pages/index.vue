@@ -65,14 +65,14 @@
             </ul>
             <div class='checkbox'>
                 <input type='checkbox' id='checkbox1' name='checkboox[]' v-model="checkbox">
-                <label for='checkbox1'>我已阅读并同意<router-link to="/agreement">《服务协议》</router-link></label>
+                <label for='checkbox1'>我已阅读并同意<a @click="storageDate('/agreement')">《服务协议》</a></label>
             </div>
             <div class="h200"></div>
             <div class="submit_box">
                 <div class="submit_cent">
                     <a class="submit_r" @click="goSend()">我要寄件</a>
                     <p>
-                        费用预估<b>{{ price }}元</b><br> <a @click="storageDate('/price')">价格计算规则</a>
+                        费用预估<b>{{ price }}元</b><br> <a @click="storageDate('/price', true)">价格计算规则</a>
                     </p>
                 </div>
             </div>
@@ -299,10 +299,12 @@
                 Indicator.close();
               },1000)
             },
-            storageDate(path){  //存储数据
-              if(!this.params.merchantName){
-                alert("请选择快递公司");
-                return false;
+            storageDate(path, type){  //存储数据
+              if(type){
+                  if(!this.params.merchantName){
+                    alert("请选择快递公司");
+                    return false;
+                  }
               }
               sessionStorage.setItem('storageData',JSON.stringify(this.params));
               sessionStorage.setItem('popParams',JSON.stringify(this.popParams));
@@ -328,10 +330,10 @@
             selectAddress(type){//选择地址
                 let myGeo = new BMap.Geocoder();
 
-              if(!sessionStorage.getItem('token')) {
-                this.isLogin()
-                return false;
-              }
+                  if(!sessionStorage.getItem('token')) {
+                    this.isLogin()
+                    return false;
+                  }
                 let _this=this
                 YLJsBridge.call('selectAddress',{codeType:2,title:type === 1 ? '寄件人地址薄' : '收件人地址薄'},function(string){
                       // 根据坐标得到地址描述
@@ -395,6 +397,10 @@
                 })
             },
             tabState(state){//切换
+              if(!sessionStorage.getItem('token')) {
+                this.isLogin()
+                return false;
+              }
                 this.clearStorage();
                 /*if(!state){
                     document.title='查快递'
@@ -627,6 +633,10 @@
             let _this=this;
             // 右上角点击方法
             window.rightItemClick=function(){
+              if(!sessionStorage.getItem('token')) {
+                _this.isLogin()
+                return false;
+              }
               _this.$router.push('/order');
               this.clearStorage();
             }

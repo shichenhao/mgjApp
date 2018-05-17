@@ -214,6 +214,10 @@ window.getToken =function (){
 }
 window.login = function(){
   YLJsBridge.call('login','',function(a){
-    sessionStorage.setItem("token", a.value);
+    if(a.value != '登录失败'){
+      sessionStorage.setItem("token", a.value);
+    }else{
+      return false
+    }
   })
 }
