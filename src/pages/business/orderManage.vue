@@ -100,7 +100,8 @@
         popParams:{
           id:null,
         },
-        phone:null
+        phone:null,
+        Today:'2018-05-11'.timestampToTime(new Date().getTime())
       }
     },
     watch:{
@@ -140,7 +141,7 @@
         Indicator.open('操作中...');
         this.axios.post('/express/merchantClient/batchDoneExpressOrder',addToken({ids:id})).then((res)=>{//查询数据
           Indicator.close()
-          MessageBox('提示', '取件成功！');
+          alert('取件成功！');
           this.search();
         }).catch((error) => {
           Indicator.close();
@@ -156,10 +157,10 @@
 
         Indicator.open('操作中...');
         this.axios.post('/express/merchantClient/cancelExpressOrder',addToken(this.popParams)).then((res)=>{//查询数据
-          Indicator.close()
           this.bottomPopup=false;
           this.popParams.cancelReason=null;
-          MessageBox('提示', '取消成功！');
+          alert('取消成功！');
+          Indicator.close()
           this.search();
         }).catch((error) => {
           Indicator.close();
@@ -170,7 +171,7 @@
         Indicator.open('操作中...');
         this.axios.post('/express/merchantClient/confirmExpressOrder',addToken({id})).then((res)=>{//查询数据
           Indicator.close()
-          MessageBox('提示', '操作成功！');
+          alert('操作成功！');
           this.search();
         }).catch((error) => {
           Indicator.close();
@@ -178,29 +179,29 @@
         })
       },
       search(){
-        YLJsBridge.call('showRightItem',{isShow:true,message:this.dateDay.substr(5,12)})
         Indicator.open('加载中...');
+        YLJsBridge.call('showRightItem',{isShow:true,message:this.dateDay ? this.dateDay.substr(5,12) : this.Today.substr(5,12)})
         //this.list=[];
         this.total = 20
-        let startTime = this.dateDay;
-        let endTime = this.dateDay;
+        let startTime = this.dateDay || this.Today;
+        let endTime = this.dateDay || this.Today;
         let start= 0;
         let param ={
-          start,
-          startTime,
-          endTime
+            start,
+            startTime,
+            endTime
         }
         this.axios.post('/express/merchantClient/findExpressOrderList',addToken(param)).then((res)=>{//寄送时间
-          //alert(1)
-          Indicator.close()
-          this.list = res.data.value.list;
-          this.total = res.data.value.total
+            //alert(1)
+            Indicator.close()
+            this.list = res.data.value.list;
+            this.total = res.data.value.total
         })
       },
       loadMore() { //下拉加载数据
         if (this.total === 20) {
-          let startTime = '2018-05-11'.timestampToTime(new Date().getTime());
-          let endTime = '2018-05-12'.timestampToTime(new Date().getTime());
+          let startTime = this.Today;
+          let endTime = this.Today;
           let newStart = this.pageIndex;
           let start= (this.pageIndex*20);
           this.pageIndex=newStart+1;

@@ -58,6 +58,8 @@
         consignerName:[],//选中发货的地区
         consigneeName:[],//选中收获的地区
         params:{
+          consignerProvinceName:null,
+          consigneeProvinceName:null,
         }
       }
     },
@@ -90,6 +92,22 @@
         this.type=type
       },
       Add(){    //创建
+        if(!this.consignerName.length){
+          alert('请选择发货地址！');
+          return false
+        } else if(!this.consigneeName.length){
+          alert('请选择收货地址！');
+          return false
+        } else if (!this.params.price){
+          alert('请填写基础价格！');
+          return false
+        } else if (!this.params.weight){
+          alert('请填写基础重量！');
+          return false
+        } else if (!this.params.addPrice){
+          alert('请填写超出没公斤加价！');
+          return false
+        }
 
         Indicator.open('加载中...');
         console.log(this.params)

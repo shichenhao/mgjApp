@@ -171,6 +171,12 @@
         this.addParams.serviceDays=values[0]
       },
       Add(){    //创建
+
+        if(!this.addParams.serviceDay){
+          alert('请选择服务日期');
+          return false;
+        }
+
         Indicator.open('加载中...');
         this.addParams.serviceDay=this.addParams.serviceDays
         this.addParams.serviceTime=this.timeList.map((item)=>{

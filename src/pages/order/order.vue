@@ -5,7 +5,11 @@
         infinite-scroll-distance="20">
         <div class="order" @click="goDetail(item.id)" v-for="item in orderList">
             <div class="order_top clearfix">
-                <a class="order_xq">详情</a>
+                <a class="order_xq">
+                    {{
+                        '订单状态'.statusFilter(item.status)
+                    }}
+                </a>
                 <dl>
                     <dt>
                         <img :src="item.expressMerchant.identityImg" width="100%" v-if="item.expressMerchant.identityImg">

@@ -340,6 +340,12 @@
                   }
                 let _this=this
                 YLJsBridge.call('selectAddress',{codeType:2,title:type === 1 ? '寄件人地址薄' : '收件人地址薄'},function(string){
+                    _this.params.merchantName = null;
+                    _this.params.merchantId = null;
+                    _this.params.courierLists = [];
+                    _this.params.pickUpTime = null;
+                    // _this.params.pickUpTime = null;
+                    _this.price = 0;
                       // 根据坐标得到地址描述
                      let obj = JSON.parse(string.value)
                       myGeo.getLocation(new BMap.Point(obj.longitude, obj.latitude), function(result){

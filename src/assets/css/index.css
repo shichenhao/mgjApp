@@ -196,7 +196,7 @@ textarea::-webkit-input-placeholder {
 
 .postage_pop{
     width:5.94rem;
-    height:5.9rem;
+    min-height:5.4rem;
     background:url(../images/order_popbg2.png) no-repeat left top;
     background-size:100% auto;
     position:fixed;
@@ -230,7 +230,7 @@ textarea::-webkit-input-placeholder {
 }
 .postage_msg{
     color:#fff;
-    font-size:0.24rem;
+    font-size:0.2rem;
     width:4.59rem;
     background:#0185ad;
     padding:0.15rem 0.25rem 0.15rem 0.12rem;

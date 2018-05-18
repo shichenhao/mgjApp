@@ -6,7 +6,7 @@
       YLJsBridge.call('getToken', '', function (a) {
         //alert(a.value)
         sessionStorage.setItem("token", a.value)
-        //sessionStorage.setItem("token",'85937ecbd73940f6bf13f4bd9749df00')
+        //sessionStorage.setItem("token",'19ed1c4aba28462f8e65f5de27e425f0')
         //sessionStorage.setItem("token",'78c8001ccbdc40fb9370b66a35304b9e')
         YLJsBridge.call('getAgentId', '', function (b) {
           //alert(b.value)
