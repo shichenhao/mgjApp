@@ -37,7 +37,7 @@ textarea {-webkit-appearance: none;}
     position:relative;
 }
 .addrH_ul li dl{
-    width:5.04rem;
+    width:5.34rem;
     display:inline-block;
     border-right:1px solid #f7f7f7;
     padding-right:0.45rem;
@@ -68,15 +68,14 @@ textarea {-webkit-appearance: none;}
     line-height:0.88rem;
     width:1.1rem;
     color:#00a2e3;
-    font-weight:bold;
 }
 .addrH_ul li i{
     display:inline-block;
-    width:0.15rem;
-    height:0.15rem;
-    border-radius:.15rem;
+    width:.14rem;
+    height:.14rem;
+    border-radius:.14rem;
     position:absolute;
-    left:-0.5rem;
+    left:-0.52rem;
     top:50%;
     margin-top:-0.075rem;
     background:#10a6f2;
@@ -152,7 +151,20 @@ textarea {-webkit-appearance: none;}
 
 .submit_box{width:100%;position:fixed;left:0;bottom:0;height:1.4rem;background:#fff;}
 .submit_cent{max-width:750px;margin:0 auto;}
-.submit_cent p{font-size:0.3rem;color:#999;padding:0.22rem 0 0 0.3rem;}
+.submit_cent p{
+    height: 1.4rem;
+    display: flex;
+    align-content: center;
+    font-size:0.3rem;
+    color:#999;
+    padding:0 0 0 0.3rem;
+    flex-wrap: wrap;
+}
+.submit_cent p span{
+    width: 100%;
+    margin-top: -.15rem;
+}
+
 .submit_cent p b{font-size:0.44rem;color:#333;font-weight:normal;margin-left:0.3rem;}
 .submit_cent p a{
     font-size:0.22rem;
@@ -230,7 +242,7 @@ textarea::-webkit-input-placeholder {
 }
 .postage_msg{
     color:#fff;
-    font-size:0.2rem;
+    font-size:0.22rem;
     width:4.59rem;
     background:#0185ad;
     padding:0.15rem 0.25rem 0.15rem 0.12rem;
@@ -253,7 +265,7 @@ textarea::-webkit-input-placeholder {
     line-height:0.8rem;
     text-align:center;
     font-size:0.26rem;
-    border-radius:0.2rem;
+    border-radius:0.1rem;
 
 }
 .Iknow{

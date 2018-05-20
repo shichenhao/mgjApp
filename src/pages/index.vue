@@ -72,7 +72,8 @@
                 <div class="submit_cent">
                     <a class="submit_r" @click="goSend()">我要寄件</a>
                     <p>
-                        费用预估<b>{{ price }}元</b><br> <a @click="storageDate('/price', true)">价格计算规则</a>
+                        <span>费用预估<b>{{ price }}元</b></span>
+                        <a @click="storageDate('/price', true)">价格计算规则</a>
                     </p>
                 </div>
             </div>
@@ -140,7 +141,7 @@
             v-model="openMessage"
             position="bottom"
             style="width: 100%;">
-            <div class="openPop">
+            <div class="openPop" style="border-bottom:0 none">
                 <span class="floatL">{{ popParams.remark ? popParams.remark.length : 0 }} | 20</span>
                 <span class="floatR" @click="openMessagePop(1);">确定</span>
             </div>
@@ -175,7 +176,7 @@
         data () {
             return {
                 state:JSON.parse(sessionStorage.getItem('state') || true), //true:寄件 , false:查件
-                postage:JSON.parse(localStorage.getItem('postage')) || JSON.parse(sessionStorage.getItem('postage')) || false,//不再提示
+                postage:JSON.parse(localStorage.getItem('postage')) || JSON.parse(sessionStorage.getItem('postage')) || window.postage || false,//不再提示
                 bannerUrl:[],// 广告图
                 checkbox:true, //同意协议
                 openDate:false,//显示时间弹窗
@@ -366,13 +367,13 @@
                     if(type == 1){
                       _this.params.consignerAddressId  = obj.id
                       _this.params.consignerAddress = obj.address
-                      _this.params.consignerHouseNumber = obj.address
+                      _this.params.consignerHouseNumber = obj.houseNumber
                       _this.params.consignerName = obj.name
                       _this.params.consignerMobile = obj.mobile
                     }else if(type==2) {
                       _this.params.consigneeAddressId = obj.id
                       _this.params.consigneeAddress = obj.address
-                      _this.params.consigneerHouseNumber = obj.address
+                      _this.params.consigneerHouseNumber = obj.houseNumber
                       _this.params.consigneeName = obj.name
                       _this.params.consigneeMobile = obj.mobile
                     }
@@ -422,9 +423,9 @@
                 this.expressSstate=state ? 1 : 2
             },
             postageDel(type){//不再显示
-                type && localStorage.setItem('postage', true)
-                type && sessionStorage.setItem('postage', true)
-                this.postage=true
+                type && localStorage.setItem('postage', true);
+                this.postage=true;
+                window.postage = true;
             },
             goSend(){//寄快递
                 if(!this.params.consignerAddressId){

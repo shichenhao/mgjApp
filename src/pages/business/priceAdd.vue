@@ -30,7 +30,6 @@
             </div>
         </div>
         <div class="btnFiexd">
-            <span class="button" @click="$router.push('/business/price/')">取消</span>
             <span class="button button-primary" @click="Add">保存</span>
         </div>
         <div class="addPop" v-show="addPop">
@@ -92,10 +91,11 @@
         this.type=type
       },
       Add(){    //创建
-        if(!this.consignerName.length){
+
+        if(!this.consignerName.length && !this.params.consignerProvinceName){
           alert('请选择发货地址！');
           return false
-        } else if(!this.consigneeName.length){
+        } else if(!this.consigneeName.length && !this.params.consigneeProvinceName){
           alert('请选择收货地址！');
           return false
         } else if (!this.params.price){
@@ -105,18 +105,21 @@
           alert('请填写基础重量！');
           return false
         } else if (!this.params.addPrice){
-          alert('请填写超出没公斤加价！');
+          alert('请填写超出每公斤加价！');
           return false
         }
 
         Indicator.open('加载中...');
         console.log(this.params)
-        this.consignerName ? this.params.consignerProvince=this.consignerName.map((i)=>{
-            return i.id
-        }).toString() : ''
-        this.consigneeName ? this.params.consigneeProvince=this.consigneeName.map((i)=>{
-          return i.id
-        }).toString() : ''
+
+        if(!this.params.consignerProvinceName){
+            this.consignerName ? this.params.consignerProvince=this.consignerName.map((i)=>{
+                return i.id
+            }).toString() : ''
+            this.consigneeName ? this.params.consigneeProvince=this.consigneeName.map((i)=>{
+              return i.id
+            }).toString() : ''
+        }
 
 
         this.axios.post('/express/merchantClient/createOrMergeExpressPrice',addToken(this.params)).then((res)=>{

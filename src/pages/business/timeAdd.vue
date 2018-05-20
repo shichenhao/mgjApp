@@ -22,7 +22,6 @@
         </div>
 
         <div class="btnFiexd">
-            <span class="button" @click="$router.push('/business/time/')">取消</span>
             <span class="button button-primary" @click="Add">保存</span>
         </div>
 
@@ -171,9 +170,19 @@
         this.addParams.serviceDays=values[0]
       },
       Add(){    //创建
-
         if(!this.addParams.serviceDay){
           alert('请选择服务日期');
+          return false;
+        }
+        if(this.timeList.some((item)=>{
+            return (!item.first || !item.last)
+          })){
+          alert('请选择服务时间');
+          return false;
+        }
+
+        if(!this.timeList.length){
+          alert('请选择服务时间');
           return false;
         }
 
