@@ -382,8 +382,8 @@
             getTimes(){
                 this.params.pickUpDate=null;
                 this.params.pickUpTime=null;
-                this.popParams.pickUpDate=null;
-                this.popParams.pickUpTime=null;
+                /*this.popParams.pickUpDate=null;
+                this.popParams.pickUpTime=null;*/
                 let dayTimes={};
                 this.axios.post('/express/userClient/findExpressTimeList',addToken({merchantId:this.params.merchantId})).then((res)=>{//寄送时间
                     //this.dataTime[0].values.push(res.data.value[0].serviceDay)
