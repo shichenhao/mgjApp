@@ -104,13 +104,13 @@
             <i @click="postageDel()">&nbsp;</i>
             <h4>价格计算规则</h4>
             <div class="postage_msg">
-                <p>
+                <!--<p>
                     ● 您在下单时需先支付首重费用，根据快递员上门取货称重可能需要您补交部分邮费。
                 </p>
                 <p>
                     ● 详细邮费计算规则，请点击底部按钮<br />
                     <a>‘价格计算规则’</a>
-                </p>
+                </p>-->
             </div>
             <div class="postage_stn">
                 <a @click="postageDel()" class="Iknow">我知道了</a>

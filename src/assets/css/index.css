@@ -240,7 +240,17 @@ textarea::-webkit-input-placeholder {
     text-align:center;
 
 }
+
 .postage_msg{
+    width: 4.95rem;
+    height: 2.1rem;
+    margin:0 auto;
+    background:url(../images/txt.png) no-repeat;
+    background-size: 4.95rem 2.1rem
+}
+
+
+/*.postage_msg{
     color:#fff;
     font-size:0.22rem;
     width:4.59rem;
@@ -249,14 +259,18 @@ textarea::-webkit-input-placeholder {
     margin:0 auto;
     line-height:0.46rem;
     border-radius:0.1rem;
-}
+}*/
 .postage_msg a{
     color:#fce46a;
     font-weight:normal;
 }
 .postage_stn{
     text-align:center;
-    padding: .3rem 0 0
+    padding: .3rem 0 0;
+    width: 4.95rem;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
 }
 .postage_stn a{
     display:inline-block;
