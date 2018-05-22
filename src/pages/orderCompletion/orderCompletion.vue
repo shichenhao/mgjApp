@@ -112,26 +112,31 @@
         let time = window.setInterval(function () {
           _this.isTime();
           if (_this.seconds === 0 && _this.minutes !== 0) {
-            _this.seconds = 59
+            _this.seconds = 59;
             _this.minutes -= 1
           } else if (_this.minutes === 0 && _this.seconds === 0) {
             _this.seconds = 0
             window.clearInterval(time);
             Indicator.open('订单取消中...');
             setTimeout(()=>{
-              window.location.reload();
+              this.getInit(true)
             },5000)
           } else {
             _this.seconds -= 1
           }
         }, 1000)
       },
-      getInit(){//查询订单
+      getInit(type){//查询订单
         this.axios.post('/express/userClient/findExpressOrderById',addToken({id:this.$router.history.current.params.id})).then((res)=>{//商家列表
 
           this.orderInfo=res.data.value
-          Indicator.close();
-
+          if(!type){
+            Indicator.close();
+          }else{
+            if(this.orderInfo.status !== 1){
+              Indicator.close();
+            }
+          }
           let times = res.data.value.paymentExpireTime
           this.paymentExpireTime = res.data.value.paymentExpireTime
 
@@ -139,20 +144,20 @@
           times = times.split(':');
 
           let Time = new Date(times[0],(times[1]-1),times[2],times[3],times[4],times[5]).getTime() - new Date().getTime();
-          if(Time > 0){
-              let minutes = parseInt((Time % (1000 * 60 * 60)) / (1000 * 60));
-              let seconds = parseInt((Time % (1000 * 60)) / 1000);
-              this.minutes = minutes;
-              this.seconds = seconds;
-              this.add();
-          }else{
-            if(res.data.value.status==1){
+          if(this.orderInfo.status === 1){
+              if(Time > 0){
+                  let minutes = parseInt((Time % (1000 * 60 * 60)) / (1000 * 60));
+                  let seconds = parseInt((Time % (1000 * 60)) / 1000);
+                  this.minutes = minutes;
+                  this.seconds = seconds;
+                  this.add();
+              }else{
                 Indicator.open('订单取消中...');
                 setTimeout(()=>{
-                  window.location.reload();
-                },5000)
-              return false
-            }
+                  this.getInit(true)
+                },1000)
+                return false
+              }
           }
           /*if(new Date().getTime() > new Date(res.data.value.paymentExpireTime).getTime()){
             this.orderInfo.status = -1

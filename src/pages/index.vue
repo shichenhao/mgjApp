@@ -267,7 +267,7 @@
         Indicator.open('加载中...');
         if(sessionStorage.getItem('storageData')){
           // 保存下单信息
-          this.params = JSON.parse(sessionStorage.getItem('storageData'));
+          //this.params = JSON.parse(sessionStorage.getItem('storageData'));
           this.getTimes();
           this.popParams = JSON.parse(sessionStorage.getItem('popParams'));
           this.params = JSON.parse(sessionStorage.getItem('storageData'));
@@ -353,7 +353,8 @@
           return false;
         }
         let _this=this
-        YLJsBridge.call('selectAddress',{codeType:2,title:type === 1 ? '寄件人地址薄' : '收件人地址薄'},function(string){
+        YLJsBridge.call('selectAddress',{codeType:2,title:type === 1 ? '地址薄' : '地址薄'},function(string){
+          _this.priceParam.merchantId= null
           _this.params.merchantName = null;
           _this.params.merchantId = null;
           _this.params.courierLists = [];
@@ -547,7 +548,7 @@
         //document.title='快递公司';
       },
       popHides(checked, state){//选中的快递公司
-        this.price = window.price || 0
+        this.price = 0
         this.openCourier=false;
         this.rightTop();
         try
