@@ -36,14 +36,14 @@
                     <th>寄件地址</th>
                     <td>
                         {{orderInfo.consignerName}} {{orderInfo.consignerMobile}}
-                        <p>{{orderInfo.consignerAddress}}</p>
+                        <p>{{orderInfo.consignerAddress + orderInfo.consignerHouseNumber}}</p>
                     </td>
                 </tr>
                 <tr>
                     <th>收件地址</th>
                     <td>
                         {{orderInfo.consigneeName}} {{orderInfo.consigneeMobile}}
-                        <p>{{orderInfo.consigneeAddress}}</p>
+                        <p>{{orderInfo.consigneeAddress + orderInfo.consigneeHouseNumber}}</p>
                     </td>
                 </tr>
             </table>
@@ -90,12 +90,27 @@
       }
     },
     methods:{
+      isTime(){
+        let times = this.paymentExpireTime;
+        times = times.replace(/-/g,':').replace(' ',':');
+        times = times.split(':');
+
+        let Time = new Date(times[0],(times[1]-1),times[2],times[3],times[4],times[5]).getTime() - new Date().getTime();
+        if(Time > 0) {
+          let minutes = parseInt((Time % (1000 * 60 * 60)) / (1000 * 60));
+          let seconds = parseInt((Time % (1000 * 60)) / 1000);
+          this.minutes = minutes;
+          this.seconds = seconds;
+        }
+        Time = null;
+      },
       num: function (n) {
         return n < 10 ? '0' + n : '' + n
       },
       add: function () {
         let _this = this
         let time = window.setInterval(function () {
+          _this.isTime();
           if (_this.seconds === 0 && _this.minutes !== 0) {
             _this.seconds = 59
             _this.minutes -= 1
@@ -105,7 +120,7 @@
             Indicator.open('订单取消中...');
             setTimeout(()=>{
               window.location.reload();
-            },3000)
+            },5000)
           } else {
             _this.seconds -= 1
           }
@@ -113,9 +128,12 @@
       },
       getInit(){//查询订单
         this.axios.post('/express/userClient/findExpressOrderById',addToken({id:this.$router.history.current.params.id})).then((res)=>{//商家列表
+
+          this.orderInfo=res.data.value
           Indicator.close();
 
           let times = res.data.value.paymentExpireTime
+          this.paymentExpireTime = res.data.value.paymentExpireTime
 
           times = times.replace(/-/g,':').replace(' ',':');
           times = times.split(':');
@@ -127,9 +145,15 @@
               this.minutes = minutes;
               this.seconds = seconds;
               this.add();
+          }else{
+            if(res.data.value.status==1){
+                Indicator.open('订单取消中...');
+                setTimeout(()=>{
+                  window.location.reload();
+                },5000)
+              return false
+            }
           }
-
-          this.orderInfo=res.data.value
           /*if(new Date().getTime() > new Date(res.data.value.paymentExpireTime).getTime()){
             this.orderInfo.status = -1
           }*/

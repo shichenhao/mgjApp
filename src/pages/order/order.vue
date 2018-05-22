@@ -20,7 +20,7 @@
             </div>
             <div class="order_bot">
                 <h4>{{item.consignerName}} {{item.consignerMobile}}</h4>
-                {{item.consignerAddress}}
+                {{item.consignerAddress + item.consignerHouseNumber}}
             </div>
         </div>
         <div class="loadingCenter" v-show="loading">

@@ -313,6 +313,7 @@ textarea::-webkit-input-placeholder {
 }
 
 .openPop{
+    text-align: center;
     font-size: .3rem;
     height: .9rem;
     line-height: .9rem;
