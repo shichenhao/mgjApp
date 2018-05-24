@@ -83,9 +83,9 @@
             <div class="search_box">
                 <ul>
                     <li>
-                        <input type="text" class="search_num" v-model="searchParams.number" placeholder="请输入单号"><a class="search_sm"><img @click="scanning" src="../assets/images/icon3.jpg" width="100%"></a>
+                        <input type="text" @keyup="searchCompany" class="search_num" v-model="searchParams.number" maxlength="15" placeholder="请输入单号"><a class="search_sm"><img @click="scanning" src="../assets/images/icon3.jpg" width="100%"></a>
                     </li>
-                    <li @click="searchCompany">
+                    <li @click="openCompanyPop()">
                         <span v-if="!searchParams.company" class="search_company">
                             快递公司{{searchParams.company}}
                         </span>
@@ -128,6 +128,19 @@
             <mt-picker
                     @change="getTime"
                     :slots="dataTime">
+            </mt-picker>
+        </mt-popup>
+        <mt-popup
+                v-model="openCompany"
+                position="bottom"
+                style="width: 100%">
+            <div class="openPop">
+                <span class="floatL" @click="openCompanyPop()">取消</span>
+                <span class="floatR" @click="openCompanyPop(1);">确定</span>
+            </div>
+            <mt-picker
+                    @change="openCompanyFun"
+                    :slots="openCompanyData">
             </mt-picker>
         </mt-popup>
         <mt-popup
@@ -183,6 +196,7 @@
         bannerUrl:[],// 广告图
         checkbox:true, //同意协议
         openDate:false,//显示时间弹窗
+        openCompany:false,//查快递公司弹窗
         openCourier:false,//显示快递公司弹窗
         openMessage:false,//显示留言弹窗
         expressSstate:1,//发快递1，寄快递2
@@ -199,6 +213,14 @@
             flex: 1,
             values: [],
             className: 'slot3',
+            textAlign: 'center'
+          }
+        ],
+        openCompanyData: [//查快递公司
+          {
+            flex: 1,
+            values: [],
+            className: 'slot1',
             textAlign: 'center'
           }
         ],
@@ -220,17 +242,20 @@
           consigneeProvinceName:window.consigneeProvinceName || null,
         },
         searchParams:{//查询快递参数
-          number:null
+          number:null,
+          name:null,
         },
         popParams:{
           pickUpTime:null,
           remark:'',
         },
         price:window.price || 0,
+        companyAll:[], //查询出的快递公司
       }
     },
     computed: {
       priceNum() {
+        //alert(this.priceParam.merchantId)
         if (this.priceParam.merchantId && this.priceParam.consignerProvinceName && this.priceParam.consigneeProvinceName) {
           this.getPrice()
         } else {
@@ -400,6 +425,8 @@
         this.popParams.pickUpTime=null;*/
         let dayTimes={};
         this.axios.post('/express/userClient/findExpressTimeList',addToken({merchantId:this.params.merchantId})).then((res)=>{//寄送时间
+          let hours = new Date().getHours();
+          let minutes = new Date().getMinutes();
           //this.dataTime[0].values.push(res.data.value[0].serviceDay)
           this.dataTimeLength=res.data.value.length
           if(res.data.value.length){
@@ -410,7 +437,27 @@
               this.dataTime[0].values.push('哪一天'.filtersDay(item.serviceDay));
               dayTimes['哪一天'.filtersDay(item.serviceDay)]=item.serviceTime.split(',')
             })
-            this.dayTims=dayTimes
+
+            if(dayTimes['今天']){
+              dayTimes['今天'] =  dayTimes['今天'].filter((item)=>{
+                //alert(item.split('-')[1].split(':')[0])
+                return parseInt(item.split('-')[1].split(':')[0]) > hours || parseInt(item.split('-')[1].split(':')[1]) > minutes
+              })
+              //console.log(dayTimes['今天'].length)
+              //dayTimes['今天'] = dayTimes['今天'].length !== 0 ? dayTimes['今天'] : ['打烊']
+              //console.log(this.dataTime[0].values)
+              if(dayTimes['今天'].length === 0){
+                this.dataTime[0].values = this.dataTime[0].values.filter(i=>i !== '今天')
+                //delete dayTimes['今天']
+              }
+              //console.log(dayTimes)
+            }
+            if(!this.dataTime[0].values.length){
+              this.dataTimeLength = 0
+            }else{
+                this.dayTims=dayTimes
+            }
+            console.log(this.dayTims)
           }
         })
       },
@@ -502,20 +549,41 @@
           alert('请先选择快递公司！');
           return false
         }else if(!this.dataTimeLength){
-          alert('该快递公司暂时休息中，请换一个快递公司吧！');
+          alert('当前时间快递公司暂无法接单！');
           return false
         }
+
+
         this.openDate=!this.openDate;
         if(state && state == 1){
           this.params.pickUpTime=this.popParams.pickUpTime
           this.params.pickUpDate=this.popParams.pickUpDate
         }
       },
+      openCompanyPop(state) {//查询快递公司
+
+        if(!this.companyAll.length){
+          return false
+        }
+
+        this.openCompany=!this.openCompany;
+        if(state && state == 1){
+          this.searchParams.name = this.searchParams.names
+          this.searchParams.company = this.companyAll.filter(i=>i.name === this.searchParams.names)[0].code
+        }
+
+      },
       getTime(picker, values) {//选择寄送时间
-        console.log(values)
+        //console.log(values)
+        //alert(this.dayTims[values[0]])
+
         picker.setSlotValues(1, this.dayTims[values[0]]);
-        this.popParams.pickUpTime=values[1]
-        this.popParams.pickUpDate='生成时间'.addDate(new Date(), '转换对应的数字'.filtersDays(values[0]))
+        this.popParams.pickUpTime = values[1] === '打烊' ? null : values[1]
+        this.popParams.pickUpDate = values[1] === '打烊' ? null : '生成时间'.addDate(new Date(), '转换对应的数字'.filtersDays(values[0]))
+      },
+      openCompanyFun(picker, values) {//选择快递公司
+        console.log(values[0])
+        this.searchParams.names = values[0]
       },
       openopenCourierPop() {//选择快递公司
         if(!sessionStorage.getItem('token')) {
@@ -548,7 +616,8 @@
         //document.title='快递公司';
       },
       popHides(checked, state){//选中的快递公司
-        this.price = 0
+        //alert(2)
+        //this.price = 0
         this.openCourier=false;
         this.rightTop();
         try
@@ -608,34 +677,40 @@
         })
       },
       searchCompany(){ //查询快递公司
-        if(!this.searchParams.number){
-          alert('请输入快递单号！');
-          return false;
-        }
-        Indicator.open('查询中...');
-        this.axios.post('/express/userClient/findExpressCompanyListByNumber',addToken(this.searchParams)).then((res)=>{//商家列表
-          Indicator.close();
-          if(res.data.success){
-            if(res.data.value) {
-              window.expressName[res.data.value[0].code] = res.data.value[0].name
-              localStorage.setItem('express', JSON.stringify(window.expressName))
-              this.searchParams = {
-                number: this.searchParams.number,
-                name: res.data.value[0].name,
-                company: res.data.value[0].code,
-              }
-            }else{
-              alert('请输入正确的快递单号！')
+        //Indicator.open('查询中...');
+        this.searchParams.company = null
+        this.searchParams.name= null
+        clearTimeout(this.set)
+        this.set = setTimeout(()=>{
+            if(this.searchParams.number.length >= 10){
+                this.axios.post('/express/userClient/findExpressCompanyListByNumber',addToken(this.searchParams)).then((res)=>{//商家列表
+                  Indicator.close();
+                  if(res.data.success){
+                    this.companyAll = res.data.value
+                    if(res.data.value && res.data.value.length === 1) {
+                      window.expressName[res.data.value[0].code] = res.data.value[0].name
+                      localStorage.setItem('express', JSON.stringify(window.expressName))
+                      this.searchParams = {
+                        number: this.searchParams.number,
+                        name: res.data.value[0].name,
+                        company: res.data.value[0].code,
+                      }
+                    }else{
+                      this.openCompanyData[0].values= res.data.value.map(i=>i.name)
+                      this.searchParams.company = null
+                      this.searchParams.name= null
+                      //alert('请输入正确的快递单号！')
+                    }
+                    console.log(this.searchParams)
+                  }
+                }).catch((error)=>{
+                  Indicator.close();
+                  alert(error.response.data.message);
+                })
             }
-            console.log(this.searchParams)
-          }
-        }).catch((error)=>{
-          Indicator.close();
-          alert(error.response.data.message);
-        })
+        },500)
       },
       getPrice(){ //获取价格费用
-        this.price=0
         this.axios.post('/express/userClient/findExpressPrice',this.priceParam).then((res)=>{
           this.params.price=res.data.value.price || 0;
           this.params.weight=res.data.value.weight || 0;

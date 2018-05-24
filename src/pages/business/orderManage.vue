@@ -14,7 +14,7 @@
                     <div class="right message">
                         <span class="name">{{ item.consignerName }}</span>
                         <span class="phone">{{ item.consignerMobile }}</span>
-                        <div class="detail">{{ item.consignerAddress }}</div>
+                        <div class="detail">{{ item.consignerAddress + item.consignerHouseNumber }}</div>
                     </div>
                 </div>
                 <div class="take">
@@ -22,7 +22,7 @@
                     <div class="right message">
                         <span class="name">{{ item.consigneeName }}</span>
                         <span class="phone">{{ item.consigneeMobile }}</span>
-                        <div class="detail">{{ item.consigneeAddress }}</div>
+                        <div class="detail">{{ item.consigneeAddress + item.consigneeHouseNumber }}</div>
                     </div>
                 </div>
             </div>

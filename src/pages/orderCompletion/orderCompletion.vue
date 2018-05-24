@@ -53,7 +53,7 @@
                 <span>
                     费用预估<b>{{orderInfo.price}}元</b>
                 </span>
-                <a class="order_djs" @click="payment">去支付还剩{{minute}}分{{second}}秒</a>
+                <a class="order_djs" @click="payment">付款(还剩{{minute}}分{{second}}秒)</a>
             </div>
         </div>
     </div>
@@ -110,7 +110,7 @@
       add: function () {
         let _this = this
         let time = window.setInterval(function () {
-          _this.isTime();
+          _this.isTime(); //锁屏后时间同步
           if (_this.seconds === 0 && _this.minutes !== 0) {
             _this.seconds = 59;
             _this.minutes -= 1
@@ -119,12 +119,12 @@
             window.clearInterval(time);
             Indicator.open('订单取消中...');
             setTimeout(()=>{
-              this.getInit(true)
+              _this.getInit(true)
             },5000)
           } else {
             _this.seconds -= 1
           }
-        }, 1000)
+        }, 1010)
       },
       getInit(type){//查询订单
         this.axios.post('/express/userClient/findExpressOrderById',addToken({id:this.$router.history.current.params.id})).then((res)=>{//商家列表
@@ -135,6 +135,11 @@
           }else{
             if(this.orderInfo.status !== 1){
               Indicator.close();
+              //window.location.reload();
+            }else{
+              setTimeout(()=>{
+                this.getInit(true)
+              },1000)
             }
           }
           let times = res.data.value.paymentExpireTime
@@ -152,7 +157,6 @@
                   this.seconds = seconds;
                   this.add();
               }else{
-                Indicator.open('订单取消中...');
                 setTimeout(()=>{
                   this.getInit(true)
                 },1000)

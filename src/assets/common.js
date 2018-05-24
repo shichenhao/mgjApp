@@ -78,7 +78,7 @@ String.prototype.filtersDay=function(state){
 
 
 String.prototype.addDate = function(date, days) {
-  console.log(date, days)
+  //console.log(date, days)
   if (days == undefined || days == '') {
     days = null;
   }

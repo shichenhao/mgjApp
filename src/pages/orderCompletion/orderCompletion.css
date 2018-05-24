@@ -100,7 +100,7 @@
     display: flex;
     align-items: center;
     font-size:0.26rem;
-    justify-content: flex-end;
+    justify-content: space-between;
     padding: 0 .3rem;
     box-sizing:border-box;
     color:#999;
@@ -108,12 +108,14 @@
 }
 .order_costC a{
     font-size:0.26rem;
-    height:0.47rem;
-    line-height:0.47rem;
+    height:0.5rem;
+    line-height:0.45rem;
     display:inline-block;
     text-align:center;
-    border:1px solid #00a2d3;
-    color:#00a2d3;
+    border:1px solid #ff7c04;
+    width: 2.88rem;
+    color:#fff;
+    background: #ff7c04;
     border-radius:0.3rem;
     vertical-align:middle;
 

@@ -10,7 +10,10 @@
             <dl @click="hide(item, expressSstate)" class="clearfix" v-for="item in courier">
                 <dt v-if="!item.identityImg"><img src="../../assets/images/default.png" width="100%"></dt>
                 <dt v-if="item.identityImg"><img :src="item.identityImg" width="100%" ></dt>
-                <dd>{{item.name}}</dd>
+                <dd>
+                    <span>{{item.name}}</span>
+                    <span>{{item.price}}元</span>
+                </dd>
             </dl>
         </div>
     </div>
