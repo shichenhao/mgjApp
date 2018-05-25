@@ -367,7 +367,8 @@
             /*for(i in a.value){
                 alert(i)
             }*/
-            _this.searchParams.number = a.value['codeStr']
+            _this.searchParams.number = a.value['codeStr'];
+            _this.searchCompany();
           }
         })
       },

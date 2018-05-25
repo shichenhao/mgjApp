@@ -37,9 +37,16 @@
         Indicator.open('查询中...');
         this.axios.post('/express/userClient/findExpressByCompanyAndNumber',addToken(param)).then((res)=>{//商家列表
           Indicator.close();
-          this.detail = JSON.parse(res.data.value.result)
-          this.name = res.data.value.name
-          console.log(JSON.parse(res.data.value.result))
+          if(res.data.value){
+            this.detail = JSON.parse(res.data.value.result)
+              this.name = res.data.value.name
+              console.log(JSON.parse(res.data.value.result))
+          }else{
+            this.detail = {
+              number: ''
+            } ;
+            this.name= '暂无快递信息'
+          }
         })
       }
     },
